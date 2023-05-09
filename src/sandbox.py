@@ -1,22 +1,17 @@
-import cv2, glob, time
+import glob, time
+import re
+import cv2
 
-from analysis.aurora_index import get_aurora_mean, get_aurora_rate
-from analysis.resize import compress_img
-from analysis.predict_threhold import predict_threhold
-from analysis.split_text import get_packet
-from  util import generate_path
-# get_packet()
-# predict_threhold()
-# from analysis.dark_distinguish import divide_aurora_image
+from  util import delete_files
+from analysis.aurora_distinguish import distribute_aurora_img
+from analysis.aurora_evaluation import make_aurora_data_array, get_aurora_mean, get_aurora_rate
 
-# start = time.perf_counter()
-# print("start")
-# path = generate_path("/img/aurora/*.jpg")
-# imgs = glob.glob(path)
-# for img in imgs:
-#   print(get_aurora_mean(img, cv2.COLOR_BGR2HSV))
 
-# end = time.perf_counter()
-# handle_time = end - start
-# print("end")
-# print("handle time is :"+ str(handle_time))
+start = time.perf_counter()
+print("start")
+delete_files("/data/packet")
+delete_files("/img/test/aurora_consequence/aurora")
+delete_files("/img/test/aurora_consequence/unaurora")
+end = time.perf_counter()
+print("end")
+print("handle time is:" + str(end - start))

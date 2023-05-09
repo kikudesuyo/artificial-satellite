@@ -12,12 +12,12 @@ order=$(</home/i-spes/satellite_main/implementation/order/order.txt) #OBCから�
 #order.txtのpathをちゃんと書き直すこと
 
 #"order"がxxxのとき、特定のファイルを実行するというif文を書く
-if order == "0X01"; then #例えば"order"が"aaa"だったとき、pythonで aaa.pyというファイルを実行する
+if [ ${order} = 0X01 ]; then #例えば"order"が"aaa"だったとき、pythonで aaa.pyというファイルを実行する
   echo success
   #order.txtを削除して次にOBCから命令が来た時に備える。
 #ここまでは確認ずみ
-elif order == "0X02"; then #例えば"order"が"bbb"だったとき, カメラで撮影する
-  for i in {1..10} ; do
+elif [ ${order} = 0X02 ]; then #例えば"order"が"bbb"だったとき, カメラで撮影する
+  for i in {1..3} ; do
     folder=/home/i-spes/satellite_main/implementation/image/temp/
     file=image${i}.jpg
     raspistill -w 1960 -h 1080 -o ${folder}${file} -t 10000 #tempファイルにすべき
@@ -28,14 +28,16 @@ elif order == "0X02"; then #例えば"order"が"bbb"だったとき, カメラ�
   rm /home/i-spes/satellite_main/implementation/image/nonaurora/*.jpg
   #python /home/i-spes/satellite_main/implementation/brightness.py
 
-elif order=="0X03"; then
+elif [ ${order} = 0X03 ]; then
   python resize.py
   xxd -p /home/i-spes/satellite_main/implementation/image/aurora/downlink/downlink.jpg /home/i-spes/satellite_main/implementation/downlink/downlink_whole/downlink_whole.txt #downlink.jpgをバイナリ化した文字列をccc.txtに出力
   python split_txt.py #ccc.txtに出力した文字列を区切る
   python send_packet.py
-...
+
+elif [ ${order} = 0X04 ]; then
+  sudo shutdown now
+  #シャットダウン用のコマンド
 fi
 
 rm /home/i-spes/satellite_main/implementation/order/order.txt #場所を変更したので確認
 echo success!
-
