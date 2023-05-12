@@ -1,4 +1,4 @@
-/data
-/img
-/sandbox.py
-/requirements.txt
+sandbox.py
+/data/*
+/img/*
+/img/aurora/*

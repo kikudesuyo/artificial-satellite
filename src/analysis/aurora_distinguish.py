@@ -1,5 +1,5 @@
 import cv2
-
+import re
 
 from util import generate_path, get_current_time
 from constant import AURORA_THREHOLD
@@ -19,5 +19,5 @@ def distribute_aurora_img(absolute_path, filename):
     aurora_img_path = generate_path("/img/test/aurora_consequence/aurora/time_" + str(current_time) + "_number_" + str(filename) + ".jpg")
     cv2.imwrite(aurora_img_path, clear_img)
   else:
-    not_aurora_img_path = generate_path("/img//test/aurora_consequence/unaurora/time_" + str(current_time) + "_number_" +str(filename) + ".jpg")
+    not_aurora_img_path = generate_path("/img/test/aurora_consequence/unaurora/time_" + str(current_time) + "_number_" +str(filename) + ".jpg")
     cv2.imwrite(not_aurora_img_path, clear_img)

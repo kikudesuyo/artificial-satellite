@@ -100,6 +100,9 @@ def make_aurora_data_array():
   aurora_data_list = np.empty((0, 5), int)
   for path in aurora_img_paths:
     replace_path = re.sub(r"\\", "/", path)
+    # file_number → shooting_time
+    # 撮影時刻はファイル名から取得する
+    # shooting_time = re.search(r'time_(.+)_number', ).group(1)
     file_number = int(re.search(r'_number_(.+).jpg', replace_path).group(1))
     aurora_mean = np.array(get_aurora_mean(path, cv2.COLOR_BGR2HSV))
     aurora_rate = np.array(get_aurora_rate(path))
