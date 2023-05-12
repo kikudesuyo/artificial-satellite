@@ -40,4 +40,4 @@ def delete_files(path):
   if full != only_extension:
     raise IsADirectoryError("Error!!指定したディレクトリの中にディレクトリが存在します。")
   shutil.rmtree(absolute_path)
-  os.makedirs(absolute_path) 
+  os.makedirs(absolute_path)
