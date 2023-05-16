@@ -1,45 +1,61 @@
+
 import glob
+import cv2
+import numpy as np
+from constant import MIN_HSV_RANGE, MAX_HSV_RANGE, IMAGE_SIZE
 import time
+from util import generate_path
 
-from  util import generate_path, delete_files
-from analysis.aurora_distinguish import distribute_aurora_img
-from analysis.aurora_evaluation import make_aurora_data_array
-# ファイル振り分け
-start = time.perf_counter()
-print("start")
-delete_files("/data/packet")
-delete_files("/img/test/aurora_consequence/aurora")
-delete_files("/img/test/aurora_consequence/unaurora")
-img_paths = glob.glob(generate_path("/predict/machine_learning/aurora/*.jpg"))
-filenumber = 1
-for img_path in img_paths:
-  distribute_aurora_img(img_path, filenumber)
-  filenumber += 1
-end = time.perf_counter()
-print("end")
-print("handle time is:" + str(end - start))
+def rate_a(img_path):
+  img = cv2.imread(img_path)
+  noise_img = cv2.imread(generate_path("/img/noise.jpg"))
+  clear_img = img - noise_img
+  clear_img[clear_img < 0] = 0
+  img_hsv = cv2.cvtColor(clear_img, cv2.COLOR_BGR2HSV)
+  mask_hsv = cv2.inRange(img_hsv, np.array(MIN_HSV_RANGE), np.array(MAX_HSV_RANGE))
+  img_hist = np.histogram(np.array(mask_hsv).flatten(), bins=np.arange(256+1))[0]
+  not_aurora_pixels = int(img_hist[0])
+  aurora_pixels = int(img_hist[255])
+  aurora_rate = aurora_pixels/(not_aurora_pixels + aurora_pixels)
+  return aurora_rate
 
-#データ解析
-# start = time.perf_counter()
+def rate_b(img_path):
+  img = cv2.imread(img_path)
+  noise_img = cv2.imread(generate_path("/img/noise.jpg"))
+  clear_img = img - noise_img
+  clear_img[clear_img < 0] = 0
+  img_hsv = cv2.cvtColor(clear_img, cv2.COLOR_BGR2HSV)
+  mask_hsv = cv2.inRange(img_hsv, np.array(MIN_HSV_RANGE), np.array(MAX_HSV_RANGE))
+  img_hist = np.histogram(np.array(mask_hsv).flatten(), bins=np.arange(256+1))[0]
+  aurora_pixels = int(img_hist[255])
+  aurora_rate = aurora_pixels/ IMAGE_SIZE
+  return aurora_rate
 
-print("start")
-# テキストファイルに出力
-aurora_data_list = make_aurora_data_array()
-for aurora_data in aurora_data_list:
-  raw_file_number, raw_aurora_rate, raw_hue, raw_saturation, raw_value = aurora_data
-  file_number = str(int(raw_file_number))
-  aurora_rate = str(round(raw_aurora_rate, 2))
-  hue = str(int(raw_hue))
-  saturation = str(int(raw_saturation))
-  value = str(int(raw_value))
-  # ファイル番号からファイルのパスを取得
-  #パスから時刻取得
-  # current_time = re.search(r'time_(.+)_number', ).group(1)
-  print(file_number + aurora_rate + hue + saturation + value)
-  text_file = open(generate_path("/data/packet/" + file_number + ".txt"), "w")
-  text_file.write(file_number + aurora_rate + hue + saturation + value)
-  text_file.close()
+  
+  
+  
+img_paths = glob.glob(generate_path("/img/aurora/*"))
 
-end = time.perf_counter()
-print("end")
-print("handle time is:" + str(end - start))
+for i in range(20):
+  start = time.perf_counter()
+  for img_path in img_paths:
+    rate = rate_a(img_path)
+    # print(rate)
+  end = time.perf_counter()
+  a = end - start
+  print("a" + str(a))
+    
+  start = time.perf_counter()
+  for img_path in img_paths:
+    rate = rate_b(img_path)
+    # print()
+  end = time.perf_counter()
+  b = end - start
+  print("b" + str(b))
+  print("shortened time is:" + str(a - b))
+
+
+def change_color_space(self, img_path):
+  clear_img = self.erase_noise(img_path)
+  img_hsv = cv2.cvtclor(clear_img, cv2.COLOR_BGR2HSV)
+  return img_hsv
