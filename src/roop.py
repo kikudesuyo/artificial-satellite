@@ -1,11 +1,11 @@
 import time
-
-start = time.perf_counter()
-print("start")
 from main import main
-end = time.perf_counter()
-print("end")
-print("handle time is: " + str(end - start))
+# start = time.perf_counter()
+# print("start")
+# from main import main
+# end = time.perf_counter()
+# print("end")
+# print("handle time is: " + str(end - start))
 
 from util import generate_path
 

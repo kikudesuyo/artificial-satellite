@@ -35,6 +35,11 @@ class AuroraAnalysis():
     clear_img = img - self.noise_img
     clear_img[clear_img < 0] = 0 
     return clear_img
+  
+  def change_color_space(self, img_path):
+    clear_img = self.erase_noise(img_path)
+    img_hsv = cv2.cvtColor(clear_img, cv2.COLOR_BGR2HSV)
+    return img_hsv
 
   def get_aurora_rate(self, img_path):
     """オーロラの画素の割合を取得
@@ -44,13 +49,11 @@ class AuroraAnalysis():
     Return:
       pixel_rate(float): オーロラ率(0~1の値)
     """
-    clear_img = self.erase_noise(img_path)
-    img_hsv = cv2.cvtColor(clear_img, cv2.COLOR_BGR2HSV)
+    img_hsv = self.change_color_space(img_path)
     mask_hsv = cv2.inRange(img_hsv, np.array(MIN_HSV_RANGE), np.array(MAX_HSV_RANGE))
     img_hist = np.histogram(np.array(mask_hsv).flatten(), bins=np.arange(256+1))[0]
-    not_aurora_pixels = int(img_hist[0])
     aurora_pixels = int(img_hist[255])
-    aurora_rate = aurora_pixels/(not_aurora_pixels + aurora_pixels)
+    aurora_rate = aurora_pixels/ IMAGE_SIZE
     return aurora_rate
 
   def get_aurora_mean(self, img_path):
@@ -63,11 +66,9 @@ class AuroraAnalysis():
     Return:
     aurora_pixel_mean(numpy.ndarray): 要素数3の一次元配列
     """
-    clear_img = self.erase_noise(img_path)
-    three_dim = cv2.cvtColor(clear_img, cv2.COLOR_BGR2HSV)
+    three_dim = self.change_color_space(img_path)
     arrays = self.reshape_array(three_dim)
-    aurora_arrays = arrays[np.all(np.array(MAX_HSV_RANGE) >= arrays, axis=1)]
-    aurora_arrays = aurora_arrays[np.all(np.array(MIN_HSV_RANGE) <= aurora_arrays, axis=1)]
+    aurora_arrays = arrays[np.all((np.array(MAX_HSV_RANGE) >= arrays) & (arrays >= np.array(MIN_HSV_RANGE)), axis=1)]
     aurora_array_elements = len(aurora_arrays)
     aurora_pixel_mean = np.sum(aurora_arrays, axis=0) / aurora_array_elements
     return aurora_pixel_mean
