@@ -41,7 +41,7 @@ class AuroraAnalysis():
     img_hsv = cv2.cvtColor(clear_img, cv2.COLOR_BGR2HSV)
     return img_hsv
 
-  def get_aurora_rate(self, img_path):
+  def get_aurora_rate(self, img_hsv):
     """オーロラの画素の割合を取得
     
     Args:
@@ -49,14 +49,13 @@ class AuroraAnalysis():
     Return:
       pixel_rate(float): オーロラ率(0~1の値)
     """
-    img_hsv = self.change_color_space(img_path)
     mask_hsv = cv2.inRange(img_hsv, np.array(MIN_HSV_RANGE), np.array(MAX_HSV_RANGE))
     img_hist = np.histogram(np.array(mask_hsv).flatten(), bins=np.arange(256+1))[0]
     aurora_pixels = int(img_hist[255])
-    aurora_rate = aurora_pixels/ IMAGE_SIZE
+    aurora_rate = aurora_pixels / IMAGE_SIZE
     return aurora_rate
 
-  def get_aurora_mean(self, img_path):
+  def get_aurora_mean(self, img_hsv):
     """オーロラである画素の平均値を取得
     
     Args:
@@ -66,11 +65,9 @@ class AuroraAnalysis():
     Return:
     aurora_pixel_mean(numpy.ndarray): 要素数3の一次元配列
     """
-    three_dim = self.change_color_space(img_path)
-    arrays = self.reshape_array(three_dim)
+    arrays = self.reshape_array(img_hsv)
     aurora_arrays = arrays[np.all((np.array(MAX_HSV_RANGE) >= arrays) & (arrays >= np.array(MIN_HSV_RANGE)), axis=1)]
-    aurora_array_elements = len(aurora_arrays)
-    aurora_pixel_mean = np.sum(aurora_arrays, axis=0) / aurora_array_elements
+    aurora_pixel_mean = np.mean(aurora_arrays, axis=0)
     return aurora_pixel_mean
 
 def convert_hsv_to_bgr(hsv_value):
@@ -86,11 +83,11 @@ def convert_hsv_to_bgr(hsv_value):
   bgr_value = cv2.cvtColor(temporary_img.astype(np.uint8), cv2.COLOR_HSV2BGR).flatten()
   return bgr_value
 
-def make_aurora_data_array(img_path):
-  """オーロラデータをnumpyファイルに格納
+def make_aurora_data_array(img_relative_path):
+  """オーロラデータをnumpyに格納
 
   Arg:
-    img_path(str): artificial_satellite/からの相対パス
+    img_relative_path(str): artificial_satellite/からの相対パス
 
   Returns:
     aurora_data_list(numpy.ndarray): [filenumber, オーロラ率, Heu, Saturation, Value]からなる2重配列
@@ -100,9 +97,10 @@ def make_aurora_data_array(img_path):
   """
   analysis = AuroraAnalysis()
   aurora_data_list = np.empty((0, 5), int)
-  img_paths = glob.glob(generate_path(img_path))
+  img_paths = glob.glob(generate_path(img_relative_path))
   for img_path in img_paths:
-    aurora_rate = analysis.get_aurora_rate(img_path)
+    img_hsv = analysis.change_color_space(img_path)
+    aurora_rate = analysis.get_aurora_rate(img_hsv)
     if aurora_rate < AURORA_THREHOLD:
       continue
     replace_path = re.sub(r"\\", "/", img_path)
@@ -110,7 +108,7 @@ def make_aurora_data_array(img_path):
     # 撮影時刻はファイル名から取得する(numpyに格納するため、int型にしなければいけない)
     # shooting_time = re.search(r'time_(.+)_number', ).group(1)
     file_number = int(re.search(r'test(.+).jpg', replace_path).group(1))
-    aurora_mean = np.array(analysis.get_aurora_mean(img_path))
-    aurora_data = np.append(np.array([file_number, aurora_rate]), np.array(aurora_mean))
+    aurora_mean = np.array(analysis.get_aurora_mean(img_hsv))
+    aurora_data = np.concatenate((np.array([file_number, aurora_rate]), aurora_mean))
     aurora_data_list = np.append(aurora_data_list, np.array([aurora_data]), axis=0)
   return aurora_data_list

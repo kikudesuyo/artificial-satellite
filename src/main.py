@@ -1,4 +1,4 @@
-from  util import generate_path, delete_files
+from util import generate_path, delete_files
 from analysis.aurora_evaluation import make_aurora_data_array
 
 def main():
