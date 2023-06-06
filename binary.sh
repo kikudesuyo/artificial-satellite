@@ -1,0 +1,1 @@
+xxd -ps "/c/Users/kikuh/OneDrive - Kyushu University/directory/artificial_satellite/img/aurora/test1.jpg" "/c/Users/kikuh/OneDrive - Kyushu University/directory/artificial_satellite/data/binary.txt"
