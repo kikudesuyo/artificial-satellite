@@ -1,27 +1,13 @@
-import glob
+from communication.spi_slave import init, send_data
 
-from communication.spi_master import init, send_data
-from util import generate_path
-
-def get_aurora_data(path):
-  """/*.txtの内容をリストに出力
+def main(sending_data):
+  """
 
   Arg:
-    path (str): /artificial_sattellite/ からの相対パス 
-  Return:
-    aurora_data(list): 10進数のオーロラデータ
+      sending_data (list): str配列
   """
-  aurora_values = []
-  aurora_data_paths = glob.glob(generate_path(path))
-  for aurora_data_path in aurora_data_paths:
-    file = open(aurora_data_path, "r")
-    aurora_value = int(float(file.read()))
-    aurora_values.append(aurora_value)
-  return aurora_values
-
-def main():   
-  aurora_values = get_aurora_data("/data/packet/*.txt")
   init()
-  for aurora_value in aurora_values:
-    send_data(aurora_value)
-  
+  for packet_data in sending_data:
+    send_data(packet_data)
+
+main()

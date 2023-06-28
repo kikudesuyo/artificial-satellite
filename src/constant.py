@@ -5,6 +5,6 @@ MAX_HSV_RANGE = [80, 245, 255]
 IMAGE_SIZE = 2116800
 
 #constant of SPI communication
-SPI_MOSI = 19
-SPI_MISO = 21
-SPI_SCLK = 23
+MOSI = 19
+MISO = 21
+SCLK = 23

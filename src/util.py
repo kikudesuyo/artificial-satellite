@@ -4,6 +4,7 @@ import re
 import os
 import shutil
 import glob
+import subprocess
 
 def generate_path(path):
   """絶対パスを生成
@@ -41,3 +42,21 @@ def delete_files(path):
     raise IsADirectoryError("Error!!指定したディレクトリの中にディレクトリが存在します。")
   shutil.rmtree(absolute_path)
   os.makedirs(absolute_path)
+
+def set_date_on_raspi(date):
+  """ラズパイの時計合わせ
+
+  Args:
+      date (str): 'yyyy/mm/dd hh:mm:ss'
+  Cation:
+    bashコマンドでのみ使用可能
+  """
+  subprocess.run("sudo date --set=" + date)
+  
+def shutdown():
+  """
+  
+  Caution:
+    bashコマンドでのみ使用可能
+  """
+  subprocess.run("sudo shutdown now")
