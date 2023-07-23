@@ -1,25 +1,20 @@
 import subprocess
-import RPi.GPIO as GPIO
 
-from util import generate_path
+from util import generate_path, get_current_time
 
-def take_photo(number_of_shots, interval):
+def take_photo(shooting_times, shooting_interval_msec, width_size=1960, height_size=1080):
   """撮影
 
   Args:
-      number_of_shots (int): 撮影する枚数
-      interval (int): 撮影間隔(ミリ秒) 
+      shooting_times (int): 撮影回数
+      shooting_interval_msec (int): 撮影間隔(ミリ秒) 
+      width_size (int): 縦画素数
+      height_size (int): 横画素数
   """
-  img_path = generate_path("/img/shooting_img/")
-  GPIO.setmode (GPIO.BCM)
-  GPIO.setup(17,GPIO.OUT)
-  for number in range(number_of_shots):
-    GPIO.output(17, 1)
-    GPIO.output(17, 0)
+  img_dir_path = generate_path("/img/shooting_img/")
+  for _ in range(shooting_times):
     #画像のファイル名を時刻データにする
-    shooting = f'raspistill -t {interval} -h 1080 -w 1960 -o {img_path}number{number}.jpg'
-    print(shooting)
-    ret = subprocess.run(shooting,shell=True, check=True)
-    print(ret)
-    
-take_photo(5, 1000)
+    #型は/DDhhmmss.jpg
+    shooting_time = get_current_time()[6:]
+    img_path = img_dir_path + shooting_time
+    subprocess.run(['raspistill', '-o', img_path, '-t', shooting_interval_msec, '-w', str(width_size), '-h', str(height_size)])

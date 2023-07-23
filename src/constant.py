@@ -8,3 +8,6 @@ IMAGE_SIZE = 2116800
 MOSI = 19
 MISO = 21
 SCLK = 23
+
+#constant of order
+DATA_SIZE_INDEX = 2

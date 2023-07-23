@@ -1,4 +1,5 @@
 import glob
+from natsort import natsorted
 
 from util import generate_path
 
@@ -86,7 +87,7 @@ def get_splited_data(relative_path):
   Return:
     splited_data (list[str])
   """
-  data_paths = glob.glob(generate_path(relative_path)) 
+  data_paths = natsorted(glob.glob(generate_path(relative_path)))
   splited_data = []
   for data_path in data_paths:
     with open(data_path,  "r") as text_file:

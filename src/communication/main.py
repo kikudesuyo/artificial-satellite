@@ -1,13 +1,12 @@
-from communication.spi_slave import init, send_data
+from communication.spi_slave import SpiCommunication
 
-def main(sending_data):
+def main(sending_data, restart_index=0):
   """
 
   Arg:
-      sending_data (list): str配列
+    sending_data (list[str]):
+    restart_index (int): 送信再開する配列のindex
   """
-  init()
-  for packet_data in sending_data:
-    send_data(packet_data)
-
-main()
+  spi = SpiCommunication()
+  for packet_data in sending_data[restart_index:]:
+    spi.send_data(packet_data)

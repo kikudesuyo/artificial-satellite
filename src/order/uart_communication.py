@@ -1,7 +1,6 @@
 import serial
-import time
-
-from util import generate_path
+import binascii
+from constant import DATA_SIZE_INDEX
 
 class UartCommunication():
   
@@ -11,26 +10,26 @@ class UartCommunication():
   def send_data(self, command):
     self.ser.write(command.encode("utf-8"))
     
-  def receive_data(self, string_length):
-    command = self.ser.read(string_length)
+  def receive_one_byte(self):
+    command = self.ser.read()
     return command
   
   def close(self):
     self.ser.close()
 
-uart = UartCommunication()
-uart.send_command("1234")
-command = uart.receive_command()
-uart.close()
-
-def receive_command(string_length):
+def receive_command(format_array):
   uart = UartCommunication()
+  index = 0
   while True:
-    command = uart.receive_command(string_length)
-    if command != "":
+    #format_array[index] = int(binascii.hexlify(uart.receive_one_byte()), 16)
+    format_array[index] = uart.receive_one_byte()
+    if index + 1 == format_array[DATA_SIZE_INDEX] + 5:
       break
-    time.sleep(0.1)
+    index += 1
+  uart.close()
+  return format_array
 
 def send_command(command):
   uart = UartCommunication()
   uart.send_command(command)
+  uart.close()
