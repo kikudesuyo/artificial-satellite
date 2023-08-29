@@ -1,6 +1,5 @@
 from shooting.take_photograph import take_photo
-from format.uart_communication import receive_command
-from format.uart_communication import send_command
+from format.uart_communication import receive_command, send_command
 from util import shutdown, set_date_on_raspi
 
 
