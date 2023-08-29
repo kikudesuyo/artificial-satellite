@@ -8,18 +8,13 @@ from format.uart_communication import send_command, receive_command
 from util import generate_path
 
 def execute():
-  command = receive_command(15)
+  command = receive_command()
+  
   if command == "オーロラ撮影":
-    time_data = receive_command(15)
-    with open(generate_path("/data/satellite_time.txt"), "w") as file:
-      file.write(time_data)
-    set_date_on_raspi("0001/01/01 00:00:00")
-    take_photo(shooting_times=10, interval_msec=2000)
-    send_command("撮影終了")
-  elif command == "画像解析":
-    analysis_main()
-    delete_files("/img/shooting_img/*")
-    send_command("解析終了")
+    """撮影フローに従う"""
+    after_shooting = "撮影処理"
+  elif command == "画像解析" or after_shooting == "撮影後継続可能":
+    """解析フローに従う"""
   elif command == "画像分割":
     delete_files("/data/aurora_img")
     convert_img_into_text("/img/downlink_img/compressed_img.jpg")
