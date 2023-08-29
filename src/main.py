@@ -2,16 +2,19 @@ from util import shutdown, set_date_on_raspi, delete_files
 from shooting.take_photograph import take_photo
 from analysis.main import main as analysis_main
 from analysis.file_generation import convert_img_into_text, split_text_string
-from communication.main import main as communication_main
-from communication.shape_up import get_aurora_data, get_splited_data
-from order.uart_communication import send_command, receive_command
+from downlink.main import main as communication_main
+from downlink.shape_up import get_aurora_data, get_splited_data
+from format.uart_communication import send_command, receive_command
+from util import generate_path
 
 def execute():
   command = receive_command(15)
   if command == "オーロラ撮影":
     time_data = receive_command(15)
-    set_date_on_raspi(time_data)
-    take_photo(10, 2000)
+    with open(generate_path("/data/satellite_time.txt"), "w") as file:
+      file.write(time_data)
+    set_date_on_raspi("0001/01/01 00:00:00")
+    take_photo(shooting_times=10, interval_msec=2000)
     send_command("撮影終了")
   elif command == "画像解析":
     analysis_main()
