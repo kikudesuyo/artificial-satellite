@@ -18,7 +18,6 @@ def execute():
     split_flow()
   elif command == "ダウンリンク":
     downlink_flow()
-    communication_main(sending_data)
-    send_command("通信終了")
     delete_files("/data/aurora_data")
+    send_command("シャットダウン要求")
   shutdown()
