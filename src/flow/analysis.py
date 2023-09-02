@@ -9,6 +9,7 @@ def analysis_flow():
   if amount_aurora_data >= 1000:
     delete_files("/data/aurora_data")
   analysis_main()
+  delete_files("/img/shooting_img")
   send_command("電力停止要求")
   receive_command("シャットダウン要求受信")
   shutdown()
