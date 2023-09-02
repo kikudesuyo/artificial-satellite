@@ -2,7 +2,7 @@ from format.uart_communication import send_command, receive_command
 from flow.analysis import analysis_flow
 from flow.downlink import downlink_flow
 from flow.shooting import shooting_flow
-from flow.split import split_workflow
+from flow.split import split_flow
 
 def execute():
   command = receive_command()
