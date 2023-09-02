@@ -40,15 +40,6 @@ def run():
 def selection(format_array):
     SENDER = FORMAT_ADRS_SENDER(format_array)
     CMD    = format_array[FORMAT_CMD]
-
-    #UARTreceive
-    """
-    original_list = ['0']*20
-    format_array = receive_command(original_list)
-    print(format_array)
-    ##format_array = [b'\x63\x01\x03\xc2\x3b\xab']
-    print("format_array[1] = " + str(format_array[1]))
-    """
     
     if SENDER == EPS_adrs:
         if CMD == CMD_EPS_RPI_SHUTDOWN_REQUEST:
@@ -57,7 +48,6 @@ def selection(format_array):
             #regist_now_task(now_task,taskflag)
             #shutdown()
  
-        
         elif CMD == ACK_EPS_RPI_ANALISYS:
             send_CMD(MC_adrs,ACK_RPI_MC_ANALISYS_START)
             print("analysis_start")
@@ -65,32 +55,15 @@ def selection(format_array):
             send_CMD(MC_adrs, CMD_RPI_MC_ANALISYS_FINISH)
             
             #send_MC([0x74,0x02,0x00,0x00,0x00]) #解析終了コマンド
-
-
         elif CMD == ACK_MC_RPI_DOWNLINK_REQUEST: #ダウンリンク指示コマンド
             print("down")
             #データ送信の準備プログラムを走らせる。
         else :
             print("NO_CMD")
-
     if SENDER == COM_adrs:
         if CMD == ACK_COM_RPI_DOWNLINK_REQUEST_START: #ダウンリンク要請の返答コマンド
             print("down_prepare")
             downlink_flow()
-            #info_data=[0x10,0x43,0x04,0x00,0x00,0x00,0x00,0x1a,0x8d]
-            #a=set_AX25_data(info_data)
-            #info_data=[0xaa]*9
-            #a=set_scrambled_data(info_data)
-            #send_data_IO_preamble(a)
-            #dami=[0xaa]*150
-            """
-            i=0
-            while i<30:
-                send_data_IO(a)
-                time.sleep(1)
-                i=i+1
-            """
-
 
         elif CMD == ACK_COM_RPI_DOWNLINK_REQUEST_POSTPONE: #通信継続要請の返答
             #SPI継続
@@ -99,8 +72,6 @@ def selection(format_array):
         else :
             print("NO_CMD")
             
-
-
     elif SENDER == GS_adrs:
         if CMD == CMD_GS_RPI_DATA_REQUEST: #ダウンリンク指示コマンド
             print("down")
@@ -165,7 +136,6 @@ def regist_now_task(task,flag):
     
         
         
-
 if __name__=="__main__":
     print()
     MC_line = serial.Serial('/dev/ttyAMA0',9600,timeout=0)
@@ -182,10 +152,3 @@ if __name__=="__main__":
     except Exception as e:
         print(e)
         pass
-    """
-while True:
-    cmd_list=run()
-    for format_array in cmd_list:
-            selection(format_array)
-            """
-
