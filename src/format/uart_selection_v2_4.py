@@ -112,7 +112,7 @@ def selection(format_array):
             taskflag = 1
             #time_data = receive_command(15)
             #set_date_on_raspi(time_data)
-            take_photo(10, 2000, width_size=1960, height_size=1080)
+            shooting_flow()
             taskflag = 0
             print("ACK_RPI_MC_SHOOTING_FINISH")
             send_CMD(MC_adrs,ACK_RPI_MC_SHOOTING_FINISH)
@@ -127,6 +127,7 @@ def selection(format_array):
             #delete_files("/data/aurora_img")
             #convert_img_into_text("/img/downlink_img/compressed_img.jpg")
             #split_text_string("/data/downlink_data.txt")
+            split_flow()
             print("CMD_RPI_MC_SPLIT_DATA_FINISH")
             time.sleep(1)
             send_CMD(MC_adrs, CMD_RPI_MC_SPLIT_DATA_FINISH)
