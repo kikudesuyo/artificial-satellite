@@ -3,6 +3,7 @@ from flow.analysis import analysis_flow
 from flow.downlink import downlink_flow
 from flow.shooting import shooting_flow
 from flow.split import split_flow
+from util import shutdown, delete_files
 
 def execute():
   command = receive_command()
