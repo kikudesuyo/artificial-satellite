@@ -1,11 +1,8 @@
-from util import shutdown, set_date_on_raspi, delete_files
-from shooting.take_photograph import take_photo
-from analysis.main import main as analysis_main
-from analysis.file_generation import convert_img_into_text, split_text_string
-from downlink.main import main as communication_main
-from downlink.shape_up import get_aurora_data, get_splited_data
 from format.uart_communication import send_command, receive_command
-from util import generate_path
+from flow.analysis import analysis_flow
+from flow.downlink import downlink_flow
+from flow.shooting import shooting_flow
+from flow.split import split_workflow
 
 def execute():
   command = receive_command()
