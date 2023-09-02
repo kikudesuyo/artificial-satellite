@@ -5,18 +5,17 @@ from helper.file_operation import get_amount
 
 
 def shooting_flow():
-  send_command("撮影指示の受信完了")
   row_date = receive_command()
   date = hex(row_date)
   set_date_on_raspi(date)
   amount_img = get_amount("/img/shooting_img")
-  if amount_img >= 2000:
+  if amount_img >= 2500:
     delete_files("/img/shooting_img")
   take_photo(750, 2000) #緯度によって強制停止してもいいかもしれない（別のターミナルで）
   send_command("継続可能かEPSに尋ねる")
   command = receive_command("継続可能かどうか")
   if command == "シャットダウンか":
-    shutdown()
     return 0
   else:
+    send_command("解析指示を受けました")
     return "解析継続"
