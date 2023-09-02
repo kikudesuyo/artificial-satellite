@@ -19,5 +19,5 @@ def take_photo(shooting_times, interval_msec, width_size=1960, height_size=1080)
     with open(generate_path("/data/satellite_time.txt"), "r") as file:
       raw_satellite_time = file.read()
     filename = calc_elasped_satellite_time(raw_satellite_time)
-    file_path = img_dir_path + filename + ".img"
+    file_path = img_dir_path + filename + ".jpg"
     subprocess.run(['raspistill', '-o', file_path, '-t', interval_msec, '-w', str(width_size), '-h', str(height_size)])
