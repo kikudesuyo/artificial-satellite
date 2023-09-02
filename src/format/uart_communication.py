@@ -11,7 +11,7 @@ class UartCommunication():
     self.ser.write(command.encode("utf-8"))
     
   def receive_one_byte(self):
-    command = self.ser.read()
+    command = self.ser.read(1)
     return command
   
   def close(self):
@@ -29,11 +29,16 @@ def receive_command(format_array=20*[0]):
   uart = UartCommunication()
   index = 0
   while True:
-    #format_array[index] = int(binascii.hexlify(uart.receive_one_byte()), 16)
-    format_array[index] = uart.receive_one_byte()
+    format_array[index] = binascii.hexlify(uart.receive_one_byte())
+    #format_array[index] = uart.receive_one_byte()
+    """
     if int(format_array[DATA_SIZE_INDEX], 16) != 0:
       total_data_size = int(format_array[DATA_SIZE_INDEX], 16) + 5
     if index + 1 == total_data_size:
+      break
+    index += 1
+    """
+    if index == 50:
       break
     index += 1
   uart.close()

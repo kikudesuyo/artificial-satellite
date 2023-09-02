@@ -1,8 +1,8 @@
-# from format.uart_communication import send_command, receive_command
+from format.uart_communication import send_command, receive_command
 
-# format_array = 20 * ['0']
-# raw_data = receive_command(format_array)
-
+format_array = 55 * ['0']
+raw_data = receive_command(format_array)
+print(raw_data)
 # #もしraw_dataがbyte型なら以下のコードを使用してください
 # int_format = list(map(ord, raw_data))
 # hex_format = list(map(hex, int_format))
