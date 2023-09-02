@@ -12,7 +12,9 @@ def downlink_flow():
     sending_data = get_splited_data("/data/aurora_img/*.txt")
     communication_main(sending_data)
   elif "画像データ番号指定":
-    sending_data = get_splited_data("/data/aurora_data/*.txt")
+    sending_data = get_splited_data("/data/aurora_img/*.txt")
     communication_main(sending_data)
+  elif "画像データ送信完了":
+    delete_files("/data/aurora_img")
   send_command("通信終了")
   
