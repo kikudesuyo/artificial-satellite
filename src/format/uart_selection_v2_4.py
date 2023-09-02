@@ -76,6 +76,7 @@ def selection(format_array):
     if SENDER == COM_adrs:
         if CMD == ACK_COM_RPI_DOWNLINK_REQUEST_START: #ダウンリンク要請の返答コマンド
             print("down_prepare")
+            downlink_flow()
             #info_data=[0x10,0x43,0x04,0x00,0x00,0x00,0x00,0x1a,0x8d]
             #a=set_AX25_data(info_data)
             #info_data=[0xaa]*9
