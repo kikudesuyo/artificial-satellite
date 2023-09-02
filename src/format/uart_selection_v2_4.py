@@ -1,37 +1,10 @@
-"""
-import subprocess
-from communication.format_v1_4_3 import *
-from util import shutdown, set_date_on_raspi, delete_files
-from shooting.take_photograph import take_photo
-#from analysis.main import main as analysis_main
-from analysis.file_generation import convert_img_into_text, split_text_string
-from communication.main import main as communication_main
-from communication.shape_up import get_aurora_data, get_splited_data
-from downlink import *
-from YOTSUBA_CMD_RPI import *
-"""
-"""
-    #old_import
-import subprocess
-from shooting.test_shooting import *
-#from order.format_v1_4 import * 
-#from analysis.aurora_evaluation import *
-#from communication.spi_slave import *
-#from communication.format_v1_4_3 import *
-from communication.format_v1_4_3 import *
-#from order.uart_communication_3 import UartCommunication, send_command, receive_command
-from shooting.take_photograph import *
-from downlink import *
-from YOTSUBA_CMD_RPI import *
-"""
 import subprocess
 from util import shutdown, set_date_on_raspi, delete_files
-from shooting.take_photograph import take_photo
-#from analysis.main import main as analysis_main
-#from analysis.file_generation import convert_img_into_text, split_text_string
-from communication.format_v1_5 import *
-# from communication.shape_up import get_aurora_data, get_splited_data
-from order.uart_communication import send_command, receive_command
+from flow.analysis import analysis_flow
+from flow.downlink import downlink_flow
+from flow.shooting import shooting_flow
+from flow.split import split_flow
+from format.format import *
 from YOTSUBA_CMD_RPI import *
 
 
@@ -82,23 +55,13 @@ def selection(format_array):
             print("shut_down")
             send_CMD(EPS_adrs, ACK_RPI_EPS_SHUTDOWN)
             #regist_now_task(now_task,taskflag)
-            #subprocess.run(["sudo", "shutdown", "now"])
+            #shutdown()
+ 
         
         elif CMD == ACK_EPS_RPI_ANALISYS:
             send_CMD(MC_adrs,ACK_RPI_MC_ANALISYS_START)
             print("analysis_start")
-            #analysis_main()
-            delete_files("/img/shooting_img/*")
-
-            """
-            for i in range (shooting_time + 1):
-                erase_noise(img_path)
-                change_color_space(img_path)
-                calculate_aurora_rate(img_hsv)
-                calculate_aurora_mean(img_hsv)
-                convert_hsv_to_bgr(hsv_value)
-                make_aurora_data(img_relative_path)
-            """
+            analysis_flow()
             send_CMD(MC_adrs, CMD_RPI_MC_ANALISYS_FINISH)
             
             #send_MC([0x74,0x02,0x00,0x00,0x00]) #解析終了コマンド
