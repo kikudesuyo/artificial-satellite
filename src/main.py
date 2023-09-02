@@ -9,9 +9,11 @@ def execute():
   
   if command == "オーロラ撮影":
     """撮影フローに従う"""
+    shooting_flow()
     after_shooting = "撮影処理"
   elif command == "画像解析" or after_shooting == "撮影後継続可能":
     """解析フローに従う"""
+    analysis_flow()
   elif command == "画像分割":
     delete_files("/data/aurora_img")
     convert_img_into_text("/img/downlink_img/compressed_img.jpg")
