@@ -19,6 +19,6 @@ def execute():
   elif command == "ダウンリンク":
     downlink_flow()
     send_command("シャットダウン要求")
-  
 
+  send_command("電力停止要求")
   shutdown()
