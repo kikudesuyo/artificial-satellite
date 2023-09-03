@@ -137,8 +137,7 @@ def regist_now_task(task,flag):
     
         
 
-if __name__=="__main__":
-    print()
+def main():
     MC_line = serial.Serial('/dev/ttyAMA0',9600,timeout=0)
     send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
     #task = check_my_task()
