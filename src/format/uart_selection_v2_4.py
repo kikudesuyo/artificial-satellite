@@ -39,6 +39,7 @@ def run():
 def selection(format_array):
     SENDER = FORMAT_ADRS_SENDER(format_array)
     CMD    = format_array[FORMAT_CMD]
+    DATA   = format_array["中身のデータ"]
     
     if SENDER == EPS_ADDR:
         if CMD == CMD_EPS_RPI_SHUTDOWN_REQUEST:
@@ -75,8 +76,6 @@ def selection(format_array):
         if CMD == CMD_GS_RPI_DATA_REQUEST: #ダウンリンク指示コマンド
             print("down")
             #データ送信の準備プログラムを走らせる。
-            if "オーロラデータ受信":
-                send_data(COM_ADDR, ACK_COM_RPI_DOWNLINK_FINISH, sending_data)
 
         elif CMD == CMD_GS_RPI_SHOOTING:#時刻データ(撮影指示コマンド)
             print("photo")
@@ -85,10 +84,10 @@ def selection(format_array):
             taskflag = 1
             #time_data = receive_command(15)
             #set_date_on_raspi(time_data)
-            shooting_flow()
+            shooting_flow(DATA) #DATAの中身によって編集
             taskflag = 0
             print("ACK_RPI_MC_SHOOTING_FINISH")
-            send_CMD(MC_ADDR,ACK_RPI_MC_SHOOTING_FINISH)
+            send_CMD(MC_ADDR,ACK_RPI_MC_SHOOTING_FINISH) #継続可能かどうか尋ねる
             #send_MC([0x74,0x02,0x00,0x00,0x00]) #撮影終了コマンド(MC)
         
         elif CMD == CMD_GS_RPI_SPLIT_DATA:
@@ -108,6 +107,20 @@ def selection(format_array):
             #uplink_ack
         else :
             print("NO_CMD")
+
+
+#バックグラウンドのシャットダウン用
+def interruption(format_array):
+    SENDER = FORMAT_ADRS_SENDER(format_array)
+    CMD    = format_array[FORMAT_CMD]
+    
+    if SENDER == EPS_ADDR:
+        if CMD == CMD_EPS_RPI_SHUTDOWN_REQUEST:
+            print("background_shut_down")
+            send_CMD(EPS_ADDR, ACK_RPI_EPS_SHUTDOWN)
+            #regist_now_task(now_task,taskflag)
+            #shutdown()
+
             
 def check_my_task():
     print("check_task")
@@ -137,8 +150,7 @@ def regist_now_task(task,flag):
     
         
 
-if __name__=="__main__":
-    print()
+def main():
     MC_line = serial.Serial('/dev/ttyAMA0',9600,timeout=0)
     send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
     #task = check_my_task()
@@ -150,6 +162,17 @@ if __name__=="__main__":
             cmd_list=run()
             for format_array in cmd_list:
                 selection(format_array)
+    except Exception as e:
+        print(e)
+        pass
+
+
+def background():
+    try:
+        while True:
+            cmd_list=run()
+            for format_array in cmd_list:
+                interruption(format_array)
     except Exception as e:
         print(e)
         pass
