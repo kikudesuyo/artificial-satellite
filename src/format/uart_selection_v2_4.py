@@ -107,6 +107,20 @@ def selection(format_array):
             #uplink_ack
         else :
             print("NO_CMD")
+
+
+#バックグラウンドのシャットダウン用
+def interruption(format_array):
+    SENDER = FORMAT_ADRS_SENDER(format_array)
+    CMD    = format_array[FORMAT_CMD]
+    
+    if SENDER == EPS_ADDR:
+        if CMD == CMD_EPS_RPI_SHUTDOWN_REQUEST:
+            print("background_shut_down")
+            send_CMD(EPS_ADDR, ACK_RPI_EPS_SHUTDOWN)
+            #regist_now_task(now_task,taskflag)
+            #shutdown()
+
             
 def check_my_task():
     print("check_task")
@@ -148,6 +162,17 @@ def main():
             cmd_list=run()
             for format_array in cmd_list:
                 selection(format_array)
+    except Exception as e:
+        print(e)
+        pass
+
+
+def background():
+    try:
+        while True:
+            cmd_list=run()
+            for format_array in cmd_list:
+                interruption(format_array)
     except Exception as e:
         print(e)
         pass
