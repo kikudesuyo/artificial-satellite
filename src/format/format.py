@@ -3,7 +3,6 @@ import time
 import RPi.GPIO as GPIO
 from constant import *
 
-
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(INTERRUPT_PIN, GPIO.OUT, initial=GPIO.LOW)
 
@@ -108,12 +107,10 @@ def from_micon():
         return 0
     return cut_data
 
-
 def send_micon(SEND_DATA):
      #MC_line = serial.Serial('/dev/ttyAMA0',9600,timeout=None)
      MC_line.write(SEND_DATA)
      #MC_line.close()
-
 
 def send_MC(send_data,transfer_frag = False):
     if(transfer_frag==False):
@@ -122,7 +119,6 @@ def send_MC(send_data,transfer_frag = False):
         add_CRC16(send_data,FORMAT_CRC_STRAT(send_data))
         #print_0xdata(send_data)
     format_data_print('send_MC:',send_data)
-
     GPIO.output(INTERRUPT_PIN,GPIO.HIGH)
     #time.sleep(0.02)
     send_micon(send_data)
@@ -130,39 +126,36 @@ def send_MC(send_data,transfer_frag = False):
 
 def send_data(adrs, cmd, send_data,transfer_frag = False):
     send_data = list(send_data)
-    SEND_MC_DATA=[0x00, 0x00, 0x00, 0x00, 0x00]
+    send_mc_data=[0x00, 0x00, 0x00, 0x00, 0x00]
     if(transfer_frag==False):
-        SEND_MC_DATA[FORMAT_ADRS] = adrs
-        add_my_address(SEND_MC_DATA)
-        SEND_MC_DATA[FORMAT_CMD] = cmd
-        SEND_MC_DATA[FORMAT_DATA_SIZE] = len(send_data)
-        SEND_MC_DATA[FORMAT_DATA_START:FORMAT_DATA_START] = send_data
+        send_mc_data[FORMAT_ADRS] = adrs
+        add_my_address(send_mc_data)
+        send_mc_data[FORMAT_CMD] = cmd
+        send_mc_data[FORMAT_DATA_SIZE] = len(send_data)
+        send_mc_data[FORMAT_DATA_START:FORMAT_DATA_START] = send_data
         #print_0xdata(send_data)
-        add_CRC16(SEND_MC_DATA,FORMAT_CRC_STRAT(SEND_MC_DATA))
+        add_CRC16(send_mc_data,FORMAT_CRC_STRAT(send_mc_data))
         #print_0xdata(send_data)
-    format_data_print(adrs_list[adrs],SEND_MC_DATA)
-
+    format_data_print(adrs_list[adrs],send_mc_data)
     GPIO.output(INTERRUPT_PIN,GPIO.HIGH)
     #time.sleep(0.02)
-    send_micon(SEND_MC_DATA)
+    send_micon(send_mc_data)
     GPIO.output(INTERRUPT_PIN,GPIO.LOW)
 
 def send_CMD(adrs, cmd, transfer_frag = False):
-    SEND_CMD_DATA=[0x00, 0x00, 0x00, 0x00, 0x00]
+    send_cmd_data=[0x00, 0x00, 0x00, 0x00, 0x00]
     if(transfer_frag==False):
-        SEND_CMD_DATA[FORMAT_ADRS] = adrs
-        add_my_address(SEND_CMD_DATA)
-        SEND_CMD_DATA[FORMAT_CMD] = cmd
+        send_cmd_data[FORMAT_ADRS] = adrs
+        add_my_address(send_cmd_data)
+        send_cmd_data[FORMAT_CMD] = cmd
         #print_0xdata(send_data)
-        add_CRC16(SEND_CMD_DATA,FORMAT_CRC_STRAT(SEND_CMD_DATA))
+        add_CRC16(send_cmd_data,FORMAT_CRC_STRAT(send_cmd_data))
         #print_0xdata(send_data)
-    format_data_print(adrs_list[adrs],SEND_CMD_DATA)
-
+    format_data_print(adrs_list[adrs],send_cmd_data)
     GPIO.output(INTERRUPT_PIN,GPIO.HIGH)
     #time.sleep(0.02)
-    send_micon(SEND_CMD_DATA)
+    send_micon(send_cmd_data)
     GPIO.output(INTERRUPT_PIN,GPIO.LOW)
-
 
 def add_my_address(send_data):
 	send_data[FORMAT_ADRS] |= MY_ADDRESS << 4
@@ -202,7 +195,6 @@ def calc_CRC16(data, size):
             else:
             	# crcの先頭ビットが0のとき、crcを「左に1bit」シフトするのみ
                 crc = (crc << 1)
-    
                 
     return crc & 0xffff	#下位16bitのみが有効な計算値なので、0xffffでANDを取る
 
@@ -233,7 +225,6 @@ def int16_to_8(data,CRC16):
     data[CRC_byte]=CRC8_box[0]
     data[CRC_byte+1]=CRC8_box[1]
     return CRC8_box
-
 
 def int8_to_16 (data):
 	return (data[0] << 8) | (data[1] & 0xff)
