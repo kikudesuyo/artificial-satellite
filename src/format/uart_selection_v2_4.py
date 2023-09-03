@@ -75,8 +75,6 @@ def selection(format_array):
         if CMD == CMD_GS_RPI_DATA_REQUEST: #ダウンリンク指示コマンド
             print("down")
             #データ送信の準備プログラムを走らせる。
-            if "オーロラデータ受信":
-                send_data(COM_ADDR, ACK_COM_RPI_DOWNLINK_FINISH, sending_data)
 
         elif CMD == CMD_GS_RPI_SHOOTING:#時刻データ(撮影指示コマンド)
             print("photo")
