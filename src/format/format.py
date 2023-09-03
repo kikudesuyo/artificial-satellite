@@ -1,17 +1,11 @@
-
-
 import serial
 import time
 import RPi.GPIO as GPIO
+from constant import *
 
-
-
-#割り込みピンの設定(BCM)
-INTERRUPT_PIN = 12
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(INTERRUPT_PIN, GPIO.OUT, initial=GPIO.LOW)
-
 
 def print_0xdata(data):
 	data_x=[]
@@ -20,20 +14,6 @@ def print_0xdata(data):
 	print(*data_x)
 	print("")
         
-
-
-
-
-GS_adrs     =   0 
-COM_adrs    =   1
-CW_adrs     =   2
-MAIN_adrs   =   3
-EPS_adrs    =   4
-ADCS_adrs   =   5
-MC_adrs     =   6
-CAM_adrs    =   7
-MAG_adrs    =   8
-init_adrs   =   9
 
 adrs_list=[
     "GS",    
@@ -47,16 +27,6 @@ adrs_list=[
     "MAG",   
     "init",
     ]
-
-BUFFER_SIZE_COM    =  80
-BUFFER_SIZE_EPS    =  80
-BUFFER_SIZE_MC     =  80
-
-DATA_CORRECT    =   1
-DATA_OVERFLOW   =   0
-DATA_CRC_ERROR  =   2
-DATA_ADRS_ERROR =   3
-DATA_TIMEOUT    =   4
 
 data_error=[
     "DATA_OVERFLOW",
@@ -73,11 +43,11 @@ FORMAT_DATA_SIZE        =   2
 FORMAT_DATA_START       =   3
 
 get_COM_data=[0x00]*BUFFER_SIZE_COM
-get_COM_data[FORMAT_ADRS]=init_adrs
+get_COM_data[FORMAT_ADRS]=INIT_ADDR
 get_MC_data=[0x00]*BUFFER_SIZE_MC
-get_MC_data[FORMAT_ADRS]=init_adrs
+get_MC_data[FORMAT_ADRS]=INIT_ADDR
 get_EPS_data=[0x00]*BUFFER_SIZE_EPS
-get_EPS_data[FORMAT_ADRS]=init_adrs
+get_EPS_data[FORMAT_ADRS]=INIT_ADDR
 
 def FORMAT_CRC_STRAT(array):
     return 3 + array[FORMAT_DATA_SIZE]
@@ -92,10 +62,10 @@ UART_TIMEOUT=   80
 
 BUFFER_SIZE=    80
 
-MY_ADDRESS = CAM_adrs
+MY_ADDRESS = CAM_ADDR
 
 GET_MC_DATA = [0]*BUFFER_SIZE
-GET_MC_DATA[0] = init_adrs
+GET_MC_DATA[0] = INIT_ADDR
 
 MC_line = serial.Serial('/dev/ttyAMA0',9600,timeout=1)
      
@@ -204,7 +174,7 @@ def check_get_data(get_data, buffer_size):
     elif (check_CRC16(get_data, FORMAT_CRC_STRAT(get_data)) == False) :
         #print("CRC error\r\n")
         return DATA_CRC_ERROR
-    elif (FORMAT_ADRS_TARGET(get_data) >= init_adrs):
+    elif (FORMAT_ADRS_TARGET(get_data) >= INIT_ADDR):
         #print("address error\r\n")
         return DATA_ADRS_ERROR
 	
@@ -212,10 +182,10 @@ def check_get_data(get_data, buffer_size):
         return DATA_CORRECT
     
 def check_interrupt(get_data):
-	return FORMAT_ADRS_TARGET(get_data) != init_adrs
+	return FORMAT_ADRS_TARGET(get_data) != INIT_ADDR
 
 def interrupt_end(get_data):
-	get_data[FORMAT_ADRS] = init_adrs
+	get_data[FORMAT_ADRS] = INIT_ADDR
         
 def calc_CRC16(data, size):
     crc = 0x0000	# 初期値（使用するのは下位16bitのみ）
