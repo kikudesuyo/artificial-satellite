@@ -1,8 +1,8 @@
-from format.uart_communication import send_command, receive_command
+# from format.uart_communication import send_command, receive_command
 
-format_array = 55 * ['0']
-raw_data = receive_command(format_array)
-print(raw_data)
+# format_array = 55 * ['0']
+# raw_data = receive_command(format_array)
+# print(raw_data)
 # #もしraw_dataがbyte型なら以下のコードを使用してください
 # int_format = list(map(ord, raw_data))
 # hex_format = list(map(hex, int_format))
@@ -16,9 +16,3 @@ print(raw_data)
 # from helper.complemention import calc_elasped_satellite_time
 
 # print(calc_elasped_satellite_time("0152435"))
-
-
-# send_data = [0x01, 0x02, 0x09]
-# send_binary = bytes(send_data)
-# a = int.to_bytes(19)
-# print(a)

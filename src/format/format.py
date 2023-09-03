@@ -56,7 +56,6 @@ def FORMAT_ADRS_SENDER(array):
     return (array[FORMAT_ADRS] >> 4)
 def FORMAT_ADRS_TARGET(array):
     return (array[FORMAT_ADRS] & 0x0f)
-
 UART_TIMEOUT=   80
 
 BUFFER_SIZE=    80
@@ -67,7 +66,6 @@ GET_MC_DATA = [0]*BUFFER_SIZE
 GET_MC_DATA[0] = INIT_ADDR
 
 MC_line = serial.Serial('/dev/ttyAMA0',9600,timeout=1)
-     
 
 def from_micon():
     i=0
