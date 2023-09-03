@@ -39,6 +39,7 @@ def run():
 def selection(format_array):
     SENDER = FORMAT_ADRS_SENDER(format_array)
     CMD    = format_array[FORMAT_CMD]
+    DATA   = format_array["中身のデータ"]
     
     if SENDER == EPS_ADDR:
         if CMD == CMD_EPS_RPI_SHUTDOWN_REQUEST:
@@ -83,10 +84,10 @@ def selection(format_array):
             taskflag = 1
             #time_data = receive_command(15)
             #set_date_on_raspi(time_data)
-            shooting_flow()
+            shooting_flow(DATA) #DATAの中身によって編集
             taskflag = 0
             print("ACK_RPI_MC_SHOOTING_FINISH")
-            send_CMD(MC_ADDR,ACK_RPI_MC_SHOOTING_FINISH)
+            send_CMD(MC_ADDR,ACK_RPI_MC_SHOOTING_FINISH) #継続可能かどうか尋ねる
             #send_MC([0x74,0x02,0x00,0x00,0x00]) #撮影終了コマンド(MC)
         
         elif CMD == CMD_GS_RPI_SPLIT_DATA:
