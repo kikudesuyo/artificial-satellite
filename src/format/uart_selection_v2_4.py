@@ -135,7 +135,7 @@ def regist_now_task(task,flag):
         wf.write(str(task))
     
         
-        
+
 if __name__=="__main__":
     print()
     MC_line = serial.Serial('/dev/ttyAMA0',9600,timeout=0)
