@@ -109,7 +109,7 @@ def selection(format_array):
             print("NO_CMD")
 
 
-#バックグラウンドのシャットダウン用
+#バックグラウンドのシャットダウン用e
 def interruption(format_array):
     SENDER = FORMAT_ADRS_SENDER(format_array)
     CMD    = format_array[FORMAT_CMD]

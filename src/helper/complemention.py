@@ -1,3 +1,5 @@
+from constant import MIN_WEEK_RANGE, MAX_WEEK_RANGE, MIN_HOUR_RANGE, MAX_HOUR_RANGE, MIN_MINUTE_RANGE, MAX_MINUTE_RANGE, MIN_SECOND_RANGE, MAX_SECOND_RANGE
+
 def complement_datetime(datetime):
   "送信データはYYYYMMDDhhmmssと仮定"
   "データが正しい型ではなかったら規定値を出力"
@@ -44,3 +46,21 @@ def calc_elasped_satellite_time(raw_satellite_time):
   satellite_time = sat_elasped_time + rpi_elasped_time
   hex_satellite_time = hex(satellite_time)[2:]
   return hex_satellite_time
+
+
+def is_correct_time(time):
+  """衛星時間の正誤判定
+
+  Arg:
+    time (str): wwhhmmssの16進数データ
+  """
+  if not  MIN_WEEK_RANGE <= int(time[:2], 16) <= MAX_WEEK_RANGE:
+    raise ValueError("Invalid data.")
+  elif not  MIN_HOUR_RANGE <= int(time[2:4], 16) <= MAX_HOUR_RANGE:
+   raise ValueError("Invalid data.")
+  elif not  MIN_MINUTE_RANGE <= int(time[4:6], 16) <= MAX_MINUTE_RANGE:
+    raise ValueError("Invalid data.")
+  elif not  MIN_SECOND_RANGE <= int(time[6:8], 16) <= MAX_SECOND_RANGE:
+    raise ValueError("Invalid data.")
+  else:
+    return True
