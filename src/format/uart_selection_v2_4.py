@@ -47,12 +47,12 @@ def selection(format_array):
             #regist_now_task(now_task,taskflag)
             #shutdown()
  
-        elif CMD == ACK_EPS_RPI_ANALISYS:
+        elif CMD == ACK_EPS_RPI_ANALYSIS:
             #撮影後に継続したとき
-            send_CMD(MC_ADDR,ACK_RPI_MC_ANALISYS_START)
+            send_CMD(MC_ADDR,ACK_RPI_MC_ANALYSIS_START)
             print("analysis_start")
             analysis_flow()
-            send_CMD(MC_ADDR, CMD_RPI_MC_ANALISYS_FINISH)
+            send_CMD(MC_ADDR, CMD_RPI_MC_ANALYSIS_FINISH)
             
             #send_MC([0x74,0x02,0x00,0x00,0x00]) #解析終了コマンド
         elif CMD == ACK_MC_RPI_DOWNLINK_REQUEST: #ダウンリンク指示コマンド
@@ -87,7 +87,8 @@ def selection(format_array):
             shooting_flow(time_data)
             taskflag = 0
             print("ACK_RPI_MC_SHOOTING_FINISH")
-            send_CMD(MC_ADDR,ACK_RPI_MC_SHOOTING_FINISH) #継続可能かどうか尋ねる
+            #send_CMD(MC_ADDR,ACK_RPI_MC_SHOOTING_FINISH) #継続可能かどうか尋ねる
+            send_CMD(EPS_ADDR, CMD_RPI_EPS_ANALYSIS_REQUEST)
             #send_MC([0x74,0x02,0x00,0x00,0x00]) #撮影終了コマンド(MC)
         
         elif CMD == CMD_GS_RPI_SPLIT_DATA:
