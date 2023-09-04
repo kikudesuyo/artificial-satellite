@@ -14,8 +14,8 @@ MAX_MINUTE_RANGE = 60
 MIN_SECOND_RANGE = 0
 MAX_SECOND_RANGE = 60
 
-#他の時刻データについても範囲を記述する
-ERROR_VALUE = "" #この値は未定　１６進数の秒数データにする
+#時刻データの既定値
+ERROR_VALUE = 60480000
 
 #constant of SPI communication
 MOSI = 19

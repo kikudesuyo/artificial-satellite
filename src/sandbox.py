@@ -16,7 +16,3 @@
 # from helper.complemention import calc_elasped_satellite_time
 
 # print(calc_elasped_satellite_time("0152435"))
-
-from helper.complemention import is_correct_time
-
-is_correct_time("1811323232")

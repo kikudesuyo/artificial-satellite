@@ -20,6 +20,6 @@ def take_photo(elasped_time, shooting_times, interval_msec, width_size=1960, hei
     #画像のファイル名は衛星時刻(16進数の4byteデータ)にする
     end = time.perf_counter()
     execute_time = end - start
-    file_name = hex(elasped_time + execute_time)[2:]
+    file_name = hex(int(elasped_time + execute_time))[2:]
     file_path = img_dir_path + file_name + ".jpg"
     subprocess.run(['raspistill', '-o', file_path, '-t', str(interval_msec), '-w', str(width_size), '-h', str(height_size)])
