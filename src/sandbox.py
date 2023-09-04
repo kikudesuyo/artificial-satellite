@@ -12,3 +12,7 @@
 # """撮影するなら以下のコードを使用してください"""
 # # from shooting.take_photograph import take_photo
 # # take_photo(shooting_times=5, shooting_interval_msec=1000)
+
+from flow.split import split_flow
+
+split_flow()
