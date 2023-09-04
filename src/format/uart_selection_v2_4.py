@@ -96,9 +96,6 @@ def selection(format_array):
             print("split")
             now_task = 2
             taskflag = 1 
-            #delete_files("/data/aurora_img")
-            #convert_img_into_text("/img/downlink_img/compressed_img.jpg")
-            #split_text_string("/data/downlink_data.txt")
             split_flow()
             print("CMD_RPI_MC_SPLIT_DATA_FINISH")
             time.sleep(1)
