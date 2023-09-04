@@ -43,6 +43,7 @@ def selection(format_array):
     if SENDER == EPS_ADDR:
         if CMD == CMD_EPS_RPI_SHUTDOWN_REQUEST:
             print("shut_down")
+            #shutdownをする前に次回起動時に解析が出来るようにflagを立てる
             send_CMD(EPS_ADDR, ACK_RPI_EPS_SHUTDOWN)
             #regist_now_task(now_task,taskflag)
             #shutdown()
@@ -52,7 +53,7 @@ def selection(format_array):
             send_CMD(MC_ADDR,ACK_RPI_MC_ANALYSIS_START)
             print("analysis_start")
             analysis_flow()
-            send_CMD(MC_ADDR, CMD_RPI_MC_ANALYSIS_FINISH)
+            send_CMD(EPS_ADDR, CMD_RPI_EPS_SHUTDOWN)
             
             #send_MC([0x74,0x02,0x00,0x00,0x00]) #解析終了コマンド
         elif CMD == ACK_MC_RPI_DOWNLINK_REQUEST: #ダウンリンク指示コマンド
