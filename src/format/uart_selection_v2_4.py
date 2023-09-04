@@ -7,21 +7,6 @@ from format.format import *
 from YOTSUBA_CMD_RPI import *
 from constant import *
 
-
-now_task = 0
-taskflag=0 #finished=0/unfinished=1
-task_fin=["finished","unfinished"]
-
-shooting = 1
-analysis = 2
-split    = 3
-
-task_name=["FIRST_TIME",
-      "shooting",
-      "analysis",
-      "split"
-     ]
-
 def run():
     cmd_list=[]
     while True:
@@ -81,12 +66,9 @@ def selection(format_array):
         elif CMD == CMD_GS_RPI_SHOOTING:#時刻データ(撮影指示コマンド)
             print("photo")
             send_CMD(MC_ADDR, ACK_RPI_MC_SHOOTING_START)
-            now_task = 1
-            taskflag = 1
             time_data = format_array[FORMAT_DATA_START: FORMAT_DATA_START + format_array[FORMAT_DATA_SIZE]]
             print(time_data)
             shooting_flow(time_data)
-            taskflag = 0
             print("ACK_RPI_MC_SHOOTING_FINISH")
             #send_CMD(MC_ADDR,ACK_RPI_MC_SHOOTING_FINISH) #継続可能かどうか尋ねる
             send_CMD(EPS_ADDR, CMD_RPI_EPS_ANALYSIS_REQUEST)
@@ -96,17 +78,13 @@ def selection(format_array):
             print("ACK_RPI_MC_SPLIT_DATA_START")
             send_CMD(MC_ADDR, ACK_RPI_MC_SPLIT_DATA_START)
             print("split")
-            now_task = 2
-            taskflag = 1 
             split_flow()
             print("CMD_RPI_MC_SPLIT_DATA_FINISH")
             time.sleep(1)
             send_CMD(MC_ADDR, CMD_RPI_MC_SPLIT_DATA_FINISH)
-            taskflag =0
             #uplink_ack
         else :
             print("NO_CMD")
-
 
 #バックグラウンドのシャットダウン用e
 def interruption(format_array):
@@ -120,7 +98,6 @@ def interruption(format_array):
             #regist_now_task(now_task,taskflag)
             #shutdown()
 
-            
 def check_my_task():
     print("check_task")
     with open('task.txt', encoding="utf-8") as rf:
@@ -147,8 +124,7 @@ def regist_now_task(task,flag):
     with open('task.txt','w') as wf:
         wf.write(str(task))
     
-        
-
+    
 def main():
     MC_line = serial.Serial('/dev/ttyAMA0',9600,timeout=0)
     send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
