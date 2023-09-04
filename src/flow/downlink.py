@@ -4,7 +4,7 @@ from format.format import send_data as communication_main
 from util import delete_files
 from constant import COM_ADDR, OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
 from helper.file_operation import output_raspi_status
-from format.YOTSUBA_CMD_RPI import ACK_COM_RPI_DOWNLINK_FINISH, ACK_RPI_COM_DOWNLINK_TIMEOUT
+#from format.YOTSUBA_CMD_RPI import ACK_COM_RPI_DOWNLINK_FINISH, ACK_RPI_COM_DOWNLINK_TIMEOUT
 
 def downlink_flow():
   output_raspi_status(DOWNLINK_INTERRUPTION)

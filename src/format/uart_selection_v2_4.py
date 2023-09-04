@@ -35,10 +35,12 @@ def selection(format_array):
  
         elif CMD == ACK_EPS_RPI_ANALYSIS:
             #撮影後に継続したとき
-            send_CMD(MC_ADDR,ACK_RPI_MC_ANALYSIS_START)
+            #send_CMD(EPS_ADDR,ACK_RPI_EPS_ANALYSIS_START)
             print("analysis_start")
             analysis_flow()
+            print("analysis finish")
             send_CMD(EPS_ADDR, CMD_RPI_EPS_SHUTDOWN)
+            print("shutdown")
             
             #send_MC([0x74,0x02,0x00,0x00,0x00]) #解析終了コマンド
         elif CMD == ACK_MC_RPI_DOWNLINK_REQUEST: #ダウンリンク指示コマンド
@@ -64,15 +66,14 @@ def selection(format_array):
             #データ送信の準備プログラムを走らせる。
 
         elif CMD == CMD_GS_RPI_SHOOTING:#時刻データ(撮影指示コマンド)
-            print("photo")
+            print("shooting")
             send_CMD(MC_ADDR, ACK_RPI_MC_SHOOTING_START)
             time_data = format_array[FORMAT_DATA_START: FORMAT_DATA_START + format_array[FORMAT_DATA_SIZE]]
             print(time_data)
             shooting_flow(time_data)
-            print("ACK_RPI_MC_SHOOTING_FINISH")
-            #send_CMD(MC_ADDR,ACK_RPI_MC_SHOOTING_FINISH) #継続可能かどうか尋ねる
+            print("SHOOTING_FINISH")
+            #継続可能かどうか尋ねる
             send_CMD(EPS_ADDR, CMD_RPI_EPS_ANALYSIS_REQUEST)
-            #send_MC([0x74,0x02,0x00,0x00,0x00]) #撮影終了コマンド(MC)
         
         elif CMD == CMD_GS_RPI_SPLIT_DATA:
             print("ACK_RPI_MC_SPLIT_DATA_START")
@@ -135,8 +136,14 @@ def main():
     try:
         while True:
             cmd_list=run()
-            for format_array in cmd_list:
-                selection(format_array)
+            for index, format_array in enumerate(cmd_list):
+                if index == 0:
+                    selection(format_array)
+                else:
+                    if cmd_list[index - 1] != format_array:
+                        selection(format_array)
+                    else: 
+                        continue
     except Exception as e:
         print(e)
         pass
