@@ -82,10 +82,9 @@ def selection(format_array):
             send_CMD(MC_ADDR, ACK_RPI_MC_SHOOTING_START)
             now_task = 1
             taskflag = 1
-            #time_data = receive_command(15)
-            #set_date_on_raspi(time_data)
-            DATA   = format_array["中身のデータ"]
-            shooting_flow(DATA) #DATAの中身によって編集
+            time_data = format_array[FORMAT_DATA_START: FORMAT_DATA_START + format_array[FORMAT_DATA_SIZE]]
+            print(time_data)
+            shooting_flow(time_data)
             taskflag = 0
             print("ACK_RPI_MC_SHOOTING_FINISH")
             send_CMD(MC_ADDR,ACK_RPI_MC_SHOOTING_FINISH) #継続可能かどうか尋ねる

@@ -4,14 +4,19 @@ from helper.complemention import is_correct_time
 from constant import ERROR_VALUE
 
 
-def shooting_flow(time_date):
+def shooting_flow(time_data):
+  """
+
+  Arg:
+    time_data (list[int]): 4byteの時刻データ[week,hour,minute,second]
+  """
   try:
-    is_correct_time(time_date)
-    satellite_time = int(time_date[:2], 16)*7*24*60*60 + int(time_date[2:4], 16)*24*60*60 + int(time_date[4:6], 16)*60*60 + int(time_date[6:8], 16)*60
+    is_correct_time(time_data)
+    satellite_time = time_data[0]*7*24*60*60 + time_data[1]*24*60*60 + time_data[2]*60*60 + time_data[3]*60
   except:
     satellite_time = ERROR_VALUE
   delete_files_amount( "/img/shooting_img", threshold=2500)
-  take_photo(satellite_time, 750, 2000) #緯度によって強制停止してもいいかもしれない（別のターミナルで）
+  take_photo(satellite_time, 10, 2000) #緯度によって強制停止してもいいかもしれない（別のターミナルで）
   
   """
   command = receive_command("継続可能かどうか")

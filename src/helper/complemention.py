@@ -48,19 +48,19 @@ def calc_elasped_satellite_time(raw_satellite_time):
   return hex_satellite_time
 
 
-def is_correct_time(time):
+def is_correct_time(satellite_time):
   """衛星時間の正誤判定
 
   Arg:
-    time (str): wwhhmmssの16進数データ
+    satellite_time (list[int]):
   """
-  if not  MIN_WEEK_RANGE <= int(time[:2], 16) <= MAX_WEEK_RANGE:
+  if not  MIN_WEEK_RANGE <= satellite_time[0] <= MAX_WEEK_RANGE:
     raise ValueError("Invalid data.")
-  elif not  MIN_HOUR_RANGE <= int(time[2:4], 16) <= MAX_HOUR_RANGE:
+  elif not  MIN_HOUR_RANGE <= satellite_time[1] <= MAX_HOUR_RANGE:
    raise ValueError("Invalid data.")
-  elif not  MIN_MINUTE_RANGE <= int(time[4:6], 16) <= MAX_MINUTE_RANGE:
+  elif not  MIN_MINUTE_RANGE <= satellite_time[2] <= MAX_MINUTE_RANGE:
     raise ValueError("Invalid data.")
-  elif not  MIN_SECOND_RANGE <= int(time[6:8], 16) <= MAX_SECOND_RANGE:
+  elif not  MIN_SECOND_RANGE <= satellite_time[3] <= MAX_SECOND_RANGE:
     raise ValueError("Invalid data.")
   else:
     return True
