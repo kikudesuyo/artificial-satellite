@@ -12,7 +12,3 @@
 # """撮影するなら以下のコードを使用してください"""
 # # from shooting.take_photograph import take_photo
 # # take_photo(shooting_times=5, shooting_interval_msec=1000)
-
-# from helper.complemention import calc_elasped_satellite_time
-
-# print(calc_elasped_satellite_time("0152435"))
