@@ -4,6 +4,12 @@ MIN_HSV_RANGE = [40, 60, 0]
 MAX_HSV_RANGE = [80, 245, 255]
 IMAGE_SIZE = 2116800
 
+#衛星打ち上げ時刻
+MIN_WEEK_RANGE = 0
+MAX_WEEK_RANGE = 50
+#他の時刻データについても範囲を記述する
+ERROR_VALUE = "" #この値は未定　１６進数の秒数データにする
+
 #constant of SPI communication
 MOSI = 19
 MISO = 21

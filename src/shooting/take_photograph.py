@@ -3,13 +3,12 @@ import subprocess
 from util import generate_path
 from helper.complemention import calc_elasped_satellite_time
 
-def take_photo(shooting_times, interval_msec, width_size=1960, height_size=1080):
+def take_photo(elasped_time, shooting_times, interval_msec, width_size=1960, height_size=1080):
   """撮影
 
   Args:
       shooting_times (int): 撮影回数
       interval_msec (int): 撮影間隔(ミリ秒) 
-      file_name (str):
       width_size (int): 縦画素数
       height_size (int): 横画素数
   """
