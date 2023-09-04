@@ -1,5 +1,4 @@
 from downlink.shape_up import get_aurora_data, get_splited_data
-from format.uart_communication import send_command, receive_command
 #from downlink.main import main as communication_main
 from format.format import send_data as communication_main
 from util import delete_files

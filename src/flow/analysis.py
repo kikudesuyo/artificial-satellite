@@ -1,4 +1,3 @@
-from format.uart_communication import receive_command, send_command
 from analysis.main import main as analysis_main
 from util import shutdown, delete_files
 from helper.file_operation import delete_files_amount, output_raspi_status
