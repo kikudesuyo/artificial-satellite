@@ -8,4 +8,4 @@ def delete_files_amount(relative_path, threshold):
 
 def output_raspi_status(status):
   with open(generate_path("/src/format/order.txt"), "w") as status_file:
-    status_file.write(status)
+    status_file.write(str(status))
