@@ -22,6 +22,14 @@ def get_aurora_data(relative_path):
   splited_string = split_string(all_aurora_data)
   return splited_string
 
+def get_one_data(number):
+  aurora_data_folder_path = "/data/aurora_data/*"
+  aurora_data_path = aurora_data_folder_path + int(number) + ".txt"
+  with open(aurora_data_path, "r") as aurora_file:
+    aurora_data = aurora_file.read()
+  split_string = split_string(aurora_data)
+  return split_string
+
 def split_string(string, string_length=128):
   """オーロラデータを配列に格納
 
