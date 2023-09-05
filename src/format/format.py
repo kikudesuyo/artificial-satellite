@@ -123,18 +123,18 @@ def send_MC(send_data,transfer_frag = False):
     send_micon(send_data)
     GPIO.output(INTERRUPT_PIN,GPIO.LOW)
 
-def send_data(adrs, cmd, send_data,transfer_frag = False):
-    send_data = list(send_data)
+def send_data(adrs, cmd, downlink_data,transfer_frag = False):
+    downlink_data = list(downlink_data)
     send_mc_data=[0x00, 0x00, 0x00, 0x00, 0x00]
     if(transfer_frag==False):
         send_mc_data[FORMAT_ADRS] = adrs
         add_my_address(send_mc_data)
         send_mc_data[FORMAT_CMD] = cmd
-        send_mc_data[FORMAT_DATA_SIZE] = len(send_data)
-        send_mc_data[FORMAT_DATA_START:FORMAT_DATA_START] = send_data
-        #print_0xdata(send_data)
+        send_mc_data[FORMAT_DATA_SIZE] = len(downlink_data)
+        send_mc_data[FORMAT_DATA_START:FORMAT_DATA_START] = downlink_data
+        #print_0xdata(downlink_data)
         add_CRC16(send_mc_data,FORMAT_CRC_STRAT(send_mc_data))
-        #print_0xdata(send_data)
+        #print_0xdata(downlink_data)
     format_data_print(adrs_list[adrs],send_mc_data)
     GPIO.output(INTERRUPT_PIN,GPIO.HIGH)
     #time.sleep(0.02)
