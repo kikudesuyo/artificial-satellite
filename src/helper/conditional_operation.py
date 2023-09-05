@@ -6,6 +6,7 @@ from format.format import send_CMD
 from constant import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, ANALYSIS_INTERRUPTION, SPLIT_INTERRUPTION
 from constant import EPS_ADDR
 from format.YOTSUBA_CMD_RPI import CMD_RPI_EPS_SHUTDOWN
+from format.format import FORMAT_DATA_START
 
 def handle_based_on_previous_status():
   with open(generate_path("/src/format/order.txt", "r")) as status_file:
@@ -23,5 +24,9 @@ def handle_based_on_previous_status():
     print("shutdown")
     send_CMD(EPS_ADDR, CMD_RPI_EPS_SHUTDOWN)
     #shutdown()
-    
 
+def is_equal_command(format_array, last_format_array):
+  if format_array[:FORMAT_DATA_START] == last_format_array[:FORMAT_DATA_START]:
+    return True
+  else:
+    return False

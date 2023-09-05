@@ -4,7 +4,7 @@ from flow.analysis import analysis_flow
 from flow.shooting import shooting_flow
 from flow.split import split_flow
 from format.format import *
-from helper.conditional_operation import handle_based_on_previous_status
+from helper.conditional_operation import handle_based_on_previous_status, is_equal_command
 from YOTSUBA_CMD_RPI import *
 from constant import *
 
@@ -100,20 +100,20 @@ def main():
     send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
     handle_based_on_previous_status()
     try:
-        last_format_array = [100]
+        last_format_array = None
         while True:
             cmd_list=run()
             for format_array in cmd_list:
-                if last_format_array == [100]:
+                if last_format_array == None:
                     selection(format_array)
-                    last_format_array = format_array[:3]
+                    last_format_array = format_array
                 else:
-                    if last_format_array != format_array[:3]:
-                        selection(format_array)
-                        last_format_array = format_array[:3]
-                    else: 
+                    if is_equal_command(format_array, last_format_array):
                         print("same command")
                         continue
+                    else: 
+                        selection(format_array)
+                        last_format_array = format_array
     except Exception as e:
         print(e)
         pass
