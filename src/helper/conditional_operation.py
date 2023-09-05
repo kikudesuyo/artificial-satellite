@@ -10,8 +10,8 @@ from format.format import FORMAT_DATA_START
 
 def handle_based_on_previous_status():
   with open(generate_path("/src/format/order.txt"), "r") as status_file:
-    status = status_file.read()
-    if status == SHOOTING_COMPLETION or SHOOTING_INTERRUPTION:
+    status = int(status_file.read())
+    if status == SHOOTING_COMPLETION or status == SHOOTING_INTERRUPTION:
       analysis_flow()
     elif status == ANALYSIS_INTERRUPTION:
       delete_files("/data/aurora_data")
