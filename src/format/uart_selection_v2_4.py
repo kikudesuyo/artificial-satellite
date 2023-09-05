@@ -4,7 +4,7 @@ from flow.analysis import analysis_flow
 from flow.shooting import shooting_flow
 from flow.split import split_flow
 from format.format import *
-from helper.conditional_operation import handle_based_on_previous_status, is_equal_command
+from helper.conditional_operation import handle_based_on_previous_status, is_equal_command, does_front_handle
 from format.YOTSUBA_CMD_RPI import *
 from constant import *
 
@@ -122,8 +122,11 @@ def background():
     try:
         while True:
             cmd_list=run()
-            for format_array in cmd_list:
-                interruption(format_array)
+            if does_front_handle():
+                for format_array in cmd_list:
+                    interruption(format_array)
+            else:
+                time.sleep(5)
     except Exception as e:
         print(e)
         pass

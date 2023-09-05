@@ -16,7 +16,7 @@ def shooting_flow(time_data):
   except:
     satellite_time = ERROR_VALUE
   delete_files_amount( "/img/shooting_img", threshold=2500)
-  take_photo(satellite_time, 10, 2000) #緯度によって強制停止してもいいかもしれない（別のターミナルで）
+  take_photo(satellite_time, 3, 2000) #緯度によって強制停止してもいいかもしれない（別のターミナルで）
   output_raspi_status(SHOOTING_COMPLETION)
   """
   command = receive_command("継続可能かどうか")

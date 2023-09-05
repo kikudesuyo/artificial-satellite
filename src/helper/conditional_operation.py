@@ -3,7 +3,7 @@ from flow.analysis import analysis_flow
 from flow.split import split_flow
 from format.format import send_CMD
 
-from constant import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, ANALYSIS_INTERRUPTION, SPLIT_INTERRUPTION
+from constant import SHOOTING_COMPLETION, OTHERS_COMPLETION, SHOOTING_INTERRUPTION, ANALYSIS_INTERRUPTION, SPLIT_INTERRUPTION
 from constant import EPS_ADDR
 from format.YOTSUBA_CMD_RPI import CMD_RPI_EPS_SHUTDOWN
 from format.format import FORMAT_DATA_START
@@ -30,3 +30,12 @@ def is_equal_command(format_array, last_format_array):
     return True
   else:
     return False
+  
+def does_front_handle():
+  with open(generate_path("/src/format/order.txt"), "r") as status_file:
+    status = status_file.read()
+  if status != SHOOTING_COMPLETION or OTHERS_COMPLETION:
+    return True
+  else:
+    return False
+    
