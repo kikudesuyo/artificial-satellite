@@ -3,6 +3,7 @@ import time
 import RPi.GPIO as GPIO
 from constant import *
 
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(INTERRUPT_PIN, GPIO.OUT, initial=GPIO.LOW)
 

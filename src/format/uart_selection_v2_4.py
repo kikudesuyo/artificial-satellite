@@ -30,7 +30,6 @@ def selection(format_array):
             print("shut_down")
             #shutdownをする前に次回起動時に解析が出来るようにflagを立てる
             send_CMD(EPS_ADDR, ACK_RPI_EPS_SHUTDOWN)
-            #regist_now_task(now_task,taskflag)
             #shutdown()
  
         elif CMD == ACK_EPS_RPI_ANALYSIS:
@@ -42,7 +41,6 @@ def selection(format_array):
             send_CMD(EPS_ADDR, CMD_RPI_EPS_SHUTDOWN)
             print("shutdown")
             
-            #send_MC([0x74,0x02,0x00,0x00,0x00]) #解析終了コマンド
         elif CMD == ACK_MC_RPI_DOWNLINK_REQUEST: #ダウンリンク指示コマンド
             print("down")
             #データ送信の準備プログラムを走らせる。
@@ -96,53 +94,24 @@ def interruption(format_array):
         if CMD == CMD_EPS_RPI_SHUTDOWN_REQUEST:
             print("background_shut_down")
             send_CMD(EPS_ADDR, ACK_RPI_EPS_SHUTDOWN)
-            #regist_now_task(now_task,taskflag)
             #shutdown()
-
-def check_my_task():
-    print("check_task")
-    with open('task.txt', encoding="utf-8") as rf:
-        task = int(rf.read())
-        #print(task)
-    if task == 0x00:
-        #print("FIRST_TIME")
-        return 0
-    elif(task&0x01)==0:
-        print("new_task")
-        next_task = (task>>1)+1
-        if next_task >= 3:
-           next_task = 1
-        
-    else:
-        print("task_continue")
-        next_task = task>>1
-    return next_task
-    
-def regist_now_task(task,flag):
-    task = (task<<1) | flag
-    print("regist_task:",end="")
-    print(task_name[task])
-    with open('task.txt','w') as wf:
-        wf.write(str(task))
-    
     
 def main():
-    MC_line = serial.Serial('/dev/ttyAMA0',9600,timeout=0)
-    send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
-    #task = check_my_task()
-    #print(task)
-    #print(task_name[task])
-    
+    send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了    
     try:
         while True:
             cmd_list=run()
+            last_format_array = []
             for index, format_array in enumerate(cmd_list):
                 if index == 0:
                     selection(format_array)
+                    last_format_array = format_array
                 else:
-                    if cmd_list[index - 1] != format_array:
+                    if last_format_array != format_array:
                         selection(format_array)
+                        last_format_array = format_array
                     else: 
+                        print("same command")
                         continue
     except Exception as e:
         print(e)
