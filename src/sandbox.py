@@ -13,5 +13,6 @@
 # # from shooting.take_photograph import take_photo
 # # take_photo(shooting_times=5, shooting_interval_msec=1000)
 
-from flow.downlink import downlink_flow
-downlink_flow()
+from util import delete_files
+
+delete_files("/data/aurora_img")
