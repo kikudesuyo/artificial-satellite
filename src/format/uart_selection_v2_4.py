@@ -1,9 +1,10 @@
-from util import shutdown, set_date_on_raspi, delete_files
+from util import shutdown
 from flow.analysis import analysis_flow
 #from flow.downlink import downlink_flow
 from flow.shooting import shooting_flow
 from flow.split import split_flow
 from format.format import *
+from helper.conditional_operation import handle_based_on_previous_status
 from YOTSUBA_CMD_RPI import *
 from constant import *
 
@@ -28,7 +29,6 @@ def selection(format_array):
     if SENDER == EPS_ADDR:
         if CMD == CMD_EPS_RPI_SHUTDOWN_REQUEST:
             print("shut_down")
-            #shutdownをする前に次回起動時に解析が出来るようにflagを立てる
             send_CMD(EPS_ADDR, ACK_RPI_EPS_SHUTDOWN)
             #shutdown()
  
@@ -97,7 +97,8 @@ def interruption(format_array):
             #shutdown()
     
 def main():
-    send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了    
+    send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
+    handle_based_on_previous_status()
     try:
         while True:
             cmd_list=run()
@@ -116,7 +117,6 @@ def main():
     except Exception as e:
         print(e)
         pass
-
 
 def background():
     try:

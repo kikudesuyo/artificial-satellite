@@ -1,5 +1,4 @@
 from downlink.shape_up import get_aurora_data, get_splited_data
-#from downlink.main import main as communication_main
 from format.format import send_data as communication_main
 from util import delete_files
 from constant import COM_ADDR, OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
