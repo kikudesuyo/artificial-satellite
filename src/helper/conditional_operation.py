@@ -34,7 +34,7 @@ def is_equal_command(format_array, last_format_array):
 def does_front_handle():
   with open(generate_path("/src/format/order.txt"), "r") as status_file:
     status = status_file.read()
-  if status != SHOOTING_COMPLETION or OTHERS_COMPLETION:
+  if status != SHOOTING_COMPLETION or status != OTHERS_COMPLETION:
     return True
   else:
     return False
