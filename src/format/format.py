@@ -124,7 +124,6 @@ def send_MC(send_data,transfer_frag = False):
     GPIO.output(INTERRUPT_PIN,GPIO.LOW)
 
 def send_data(adrs, cmd, downlink_data,transfer_frag = False):
-    downlink_data = list(downlink_data)
     send_mc_data=[0x00, 0x00, 0x00, 0x00, 0x00]
     if(transfer_frag==False):
         send_mc_data[FORMAT_ADRS] = adrs
