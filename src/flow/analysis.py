@@ -1,5 +1,5 @@
 from analysis.main import main as analysis_main
-from util import shutdown, delete_files
+from util import delete_files
 from helper.file_operation import delete_files_amount, output_raspi_status
 from constant import ANALYSIS_INTERRUPTION, OTHERS_COMPLETION
 def analysis_flow():
