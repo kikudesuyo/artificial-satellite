@@ -33,8 +33,8 @@ def is_equal_command(format_array, last_format_array):
   
 def does_front_handle():
   with open(generate_path("/src/format/order.txt"), "r") as status_file:
-    status = status_file.read()
-  if status != SHOOTING_COMPLETION or status != OTHERS_COMPLETION:
+    status = int(status_file.read())
+  if status != SHOOTING_COMPLETION and status != OTHERS_COMPLETION:
     return True
   else:
     return False
