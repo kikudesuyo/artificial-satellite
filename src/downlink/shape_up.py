@@ -31,7 +31,7 @@ def get_one_aurora_data(command):
   Return:
     splited_string (str): 
   """
-  aurora_data_folder_path = "/data/aurora_data/*"
+  aurora_data_folder_path = "/data/aurora_data/"
   aurora_data_path = aurora_data_folder_path + str(command) + ".txt"
   with open(aurora_data_path, "r") as aurora_file:
     aurora_data = aurora_file.read()
@@ -110,6 +110,7 @@ def get_splited_data(relative_path):
       text_data = text_file.read()
       splited_data.append(text_data)
   return splited_data
+  
 
 def store_for_downlink(relative_path):
   """16進数文字列を2文字ごとに分割した後にint型に変換して格納
