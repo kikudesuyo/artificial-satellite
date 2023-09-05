@@ -100,17 +100,17 @@ def main():
     send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
     handle_based_on_previous_status()
     try:
+        last_format_array = [100]
         while True:
             cmd_list=run()
-            last_format_array = []
-            for index, format_array in enumerate(cmd_list):
-                if index == 0:
+            for format_array in cmd_list:
+                if last_format_array == [100]:
                     selection(format_array)
-                    last_format_array = format_array
+                    last_format_array = format_array[:3]
                 else:
-                    if last_format_array != format_array:
+                    if last_format_array != format_array[:3]:
                         selection(format_array)
-                        last_format_array = format_array
+                        last_format_array = format_array[:3]
                     else: 
                         print("same command")
                         continue
