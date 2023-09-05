@@ -23,6 +23,14 @@ def get_aurora_data(relative_path):
   return splited_string
 
 def get_one_data(number):
+  """オーロラデータを一つ読み込む
+
+  Arg:
+    number (int): GSからのコマンド
+
+  Return:
+    splited_string (str): 
+  """
   aurora_data_folder_path = "/data/aurora_data/*"
   aurora_data_path = aurora_data_folder_path + int(number) + ".txt"
   with open(aurora_data_path, "r") as aurora_file:
