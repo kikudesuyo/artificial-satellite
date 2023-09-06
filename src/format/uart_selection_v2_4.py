@@ -1,12 +1,14 @@
 from util import shutdown
 from flow.analysis import analysis_flow
-#from flow.downlink import downlink_flow
+from flow.downlink import downlink_flow
 from flow.shooting import shooting_flow
 from flow.split import split_flow
 from format.format import *
-from helper.status_operation import handle_based_on_previous_status, is_equal_command, does_front_handle
+from helper.status_operation import handle_based_on_previous_status, is_equal_command, does_front_handle, main_check_communication_status, background_check_communication_status
+from helper.file_operation import output_communication_status
 from format.YOTSUBA_CMD_RPI import *
 from constant import *
+import time
 
 def run():
     cmd_list=[]
@@ -100,12 +102,28 @@ def interruption(format_array):
             #shutdown()
     
 def main():
-    send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
+    #send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
     handle_based_on_previous_status()
     try:
         last_format_array = None
         while True:
-            cmd_list=run()
+            i = 0
+            while True:
+                if main_check_communication_status():#statusファイルの居場所を変更してもいいかも
+                    print("break!!")#ここの挙動をraspiで確認した方がいい。一つ上のwhile trueのループがどうまわるか
+                    time.sleep(10)
+                    break
+                elif i < 5:#この回数も決めた方がいい。どの程度待ってエラーが起きていると判断するか
+                    print("sleep!")
+                    time.sleep(5) #ここの時間は要相談, また、この時命令を送り続けてもらうようにする必要あり
+                    i += 1
+                else:
+                    print("Error! Background communication does not end or communication_status is not correct!")
+                    output_communication_status(NONE_COMMUNICATING)#ここの例外処理の相談した方がいい、例外処理の方法そのものや、例外処理の回数などを相談する。bacgroundも注意
+                    return
+            output_communication_status(MAIN_COMMUNICATING)
+            cmd_list = run()
+            output_communication_status(NONE_COMMUNICATING)
             for format_array in cmd_list:
                 if last_format_array == None:
                     selection(format_array)
@@ -124,8 +142,24 @@ def main():
 def background():
     try:
         while True:
+            i=0
+            while True:
+                if background_check_communication_status():
+                    time.sleep(5)
+                    print("break")
+                    break
+                elif i < 5:
+                    print("sleep!")
+                    time.sleep(5) #ここの時間は要相談, また、この時命令を送り続けてもらうようにする必要あり
+                    i += 1
+                else:
+                    print("This is the error! Background communication does not end or communication_status is not correct!")
+                    output_communication_status(NONE_COMMUNICATING)#ここの例外処理を相談した方がいい。例外処理の方法そのものや、例外処理の回数を相談する。mainも注意
+                    return
+            output_communication_status(BACKGROUND_COMMUNICATING)
+            cmd_list=run() #runを書き換えてもいいかも。引数↑で↓は最後に加える
+            output_communication_status(NONE_COMMUNICATING)
             if does_front_handle():
-                cmd_list = run()
                 for format_array in cmd_list:
                     try:
                         interruption(format_array)

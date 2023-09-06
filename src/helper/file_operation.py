@@ -9,3 +9,7 @@ def delete_files_amount(relative_path, threshold):
 def output_raspi_status(status):
   with open(generate_path("/src/format/order.txt"), "w") as status_file:
     status_file.write(str(status))
+    
+def output_communication_status(status):
+  with open(generate_path("/src/format/communication_status.txt"), "w") as status_file:
+    status_file.write(str(status))
