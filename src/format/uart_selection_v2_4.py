@@ -121,10 +121,14 @@ def main():
 def background():
     try:
         while True:
-            cmd_list=run()
             if does_front_handle():
+                cmd_list = run()
                 for format_array in cmd_list:
-                    interruption(format_array)
+                    try:
+                        interruption(format_array)
+                    except Exception as e:
+                        print(e)
+                        pass
             else:
                 time.sleep(5)
     except Exception as e:

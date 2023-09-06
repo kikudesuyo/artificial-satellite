@@ -23,20 +23,17 @@ def get_aurora_data(relative_path):
   return splited_string
 
 def get_one_aurora_data(command):
-  """オーロラデータを一つ読み込む
-
+  """１つのパケットを送信用に生成
   Arg:
-    command (int): GSからのコマンド
+    command (int): GSからのデータ（ファイル名）
 
   Return:
-    splited_string (str): 
+    downlink_data (list[int]): 0~255までの整数型配列
   """
-  aurora_data_folder_path = "/data/aurora_data/"
-  aurora_data_path = aurora_data_folder_path + str(command) + ".txt"
-  with open(aurora_data_path, "r") as aurora_file:
+  with open(generate_path("/data/aurora_data/" + str(command) + ".txt"), "r") as aurora_file:
     aurora_data = aurora_file.read()
-  split_string = split_string(aurora_data)
-  return split_string
+    downlink_data = [int(aurora_data[x:x+2], 16) for x in range(0, len(aurora_data), 2)]
+  return downlink_data
 
 def split_string(string, string_length=128):
   """オーロラデータを配列に格納

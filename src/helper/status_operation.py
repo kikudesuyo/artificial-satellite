@@ -38,4 +38,3 @@ def does_front_handle():
     return True
   else:
     return False
-    

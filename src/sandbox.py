@@ -1,5 +1,3 @@
-status = 0
-if status != 0 and status != 1:
-  print(True)
-else:
-  print(False)
+from downlink.shape_up import output_one_aurora_data
+
+print(output_one_aurora_data(1))
