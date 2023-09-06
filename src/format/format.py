@@ -57,10 +57,20 @@ def FORMAT_ADRS_SENDER(array):
     return (array[FORMAT_ADRS] >> 4)
 def FORMAT_ADRS_TARGET(array):
     return (array[FORMAT_ADRS] & 0x0f)
+
+def get_data_from_format(format_array):
+    """
+
+    Arg:
+      format_array (list[int]): 通信で形成する型
+    Return:
+      data (list[int]): データのみを抽出
+    """
+    data = format_array[FORMAT_DATA_START: FORMAT_DATA_START + format_array[FORMAT_DATA_SIZE]]
+    return data
+
 UART_TIMEOUT=   80
-
 BUFFER_SIZE=    80
-
 MY_ADDRESS = CAM_ADDR
 
 GET_MC_DATA = [0]*BUFFER_SIZE
