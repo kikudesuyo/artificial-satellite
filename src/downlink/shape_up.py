@@ -22,7 +22,7 @@ def get_aurora_data(relative_path):
   splited_string = split_string(all_aurora_data)
   return splited_string
 
-def get_one_aurora_data(command):
+def make_data_for_downlink(command):
   """１つのパケットを送信用に生成
   Arg:
     command (int): GSからのデータ（ファイル名）
