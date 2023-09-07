@@ -3,14 +3,14 @@ import glob
 
 from util import shutdown, generate_path
 from flow.analysis import analysis_flow
-from flow.downlink import generate_downlink_data, output_uplink_data
+from flow.downlink import generate_downlink_data, output_uplink_data, renew_downlink_status
 from flow.shooting import shooting_flow
 from flow.split import split_flow
 from format.format import send_CMD, send_data, from_micon, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER, FORMAT_CMD
 from helper.status_operation import handle_based_on_previous_status, is_equal_command, does_not_background_communicate, does_not_main_communicate
 from helper.file_operation import output_communication_status, output_raspi_status
 from format.command_list import *
-from constant import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, SAFE, MAIN_COMMUNICATING, BACKGROUND_COMMUNICATING, NONE_COMMUNICATING, OTHERS_COMPLETION
+from constant import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, SAFE, MAIN_COMMUNICATING, BACKGROUND_COMMUNICATING, NONE_COMMUNICATING, OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
 
 def run():
   cmd_list=[]
@@ -45,6 +45,7 @@ def send_downlink_data(downlink_data):
   except Exception as e:
     print(e)
     print("通信失敗のためシャットダウンします。")
+    output_raspi_status(DOWNLINK_INTERRUPTION)
     #shutdown()
 
 
@@ -68,9 +69,9 @@ def selection(format_array):
       output_uplink_data(format_array)
       downlink_data = generate_downlink_data()
       send_downlink_data(downlink_data)
+      renew_downlink_status()
       output_raspi_status(OTHERS_COMPLETION)
       #ダウンリンクステータスの変更をする必要がある
-
       print("down")
     else:
       print("NO_CMD")
@@ -111,6 +112,7 @@ def selection(format_array):
       output_uplink_data(format_array)
       downlink_data = generate_downlink_data()
       send_downlink_data(downlink_data)
+      renew_downlink_status()
       output_raspi_status(OTHERS_COMPLETION)
       #ダウンリンクステータスの変更をする必要がある
       #送るデータがあるなら要求、ないならシャットダウン(ダウンリンクに関しては２回目以降)
@@ -121,6 +123,8 @@ def selection(format_array):
           #shutdown()
       else:
         send_downlink_data(downlink_data)
+        renew_downlink_status()
+        output_raspi_status(OTHERS_COMPLETION)
     elif cmd == CMD_MC_RPI_SHOOTING:
       #緯度が範囲内になったら撮影
       send_CMD(ACK_RPI_MC_SHOOTING)
