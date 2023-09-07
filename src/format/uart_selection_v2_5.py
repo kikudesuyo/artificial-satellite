@@ -2,14 +2,14 @@ import time
 
 from util import shutdown
 from flow.analysis import analysis_flow
-#from flow.downlink import downlink_flow
+from flow.downlink import downlink_flow
 from flow.shooting import shooting_flow
 from flow.split import split_flow
-from format.format import send_CMD, from_micon, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER, FORMAT_CMD
+from format.format import send_CMD, send_data, from_micon, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER, FORMAT_CMD
 from helper.status_operation import handle_based_on_previous_status, is_equal_command, does_not_background_communicate, does_not_main_communicate
-from helper.file_operation import output_communication_status
+from helper.file_operation import output_communication_status, output_raspi_status
 from format.command_list import *
-from constant import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, SAFE, MAIN_COMMUNICATING, BACKGROUND_COMMUNICATING, NONE_COMMUNICATING
+from constant import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, SAFE, MAIN_COMMUNICATING, BACKGROUND_COMMUNICATING, NONE_COMMUNICATING, OTHERS_COMPLETION
 
 def run():
   cmd_list=[]
@@ -41,11 +41,14 @@ def selection(format_array):
       print("split_finish")
       time.sleep(1)
       send_CMD(EPS_ADDR, CMD_RPI_EPS_SHUTDOWN)
-    elif cmd == CMD_GS_RPI_DOWNLINK: #ダウンリンク指示コマンド
-      send_CMD(ACK_RPI_GS_DONWLINK)
+    elif cmd == CMD_GS_RPI_DOWNLINK: #ダウンリンク指示コマンド]
+      format_array = downlink_flow()
+      send_data(MC_ADDR, CMD_RPI_MC_DOWNLINK, format_array)
+      output_raspi_status(OTHERS_COMPLETION)
+      #ダウンリンクステータスの変更をする必要がある
+
       print("down")
-      send_CMD(MC_ADDR, CMD_RPI_MC_DOWNLINK)
-    else :
+    else:
       print("NO_CMD")
 
   elif sender == CW_ADDR:
@@ -81,10 +84,14 @@ def selection(format_array):
     elif cmd == ACK_MC_RPI_DONWLINK:
       pass
     elif cmd == CMD_MC_RPI_DOWNLINK_FINISH:
-      send_CMD(MC_ADDR, ACK_RPI_MC_DOWNLINK_FINISH)
+      format_array = downlink_flow()
+      send_data(MC_ADDR, ACK_RPI_MC_DOWNLINK_FINISH, format_array)
+      output_raspi_status(OTHERS_COMPLETION)
+      #ダウンリンクステータスの変更をする必要がある
       #送るデータがあるなら要求、ないならシャットダウン(ダウンリンクに関しては２回目以降)
       if "まだデータある？":
         send_CMD(MC_ADDR, CMD_RPI_MC_DOWNLINK)
+        #output_raspi_status(OTHERS_COMPLETION)
     elif cmd == CMD_MC_RPI_SHOOTING:
       #緯度が範囲内になったら撮影
       send_CMD(ACK_RPI_MC_SHOOTING)

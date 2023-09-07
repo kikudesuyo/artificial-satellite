@@ -1,6 +1,13 @@
-from analysis.resize import compress_img
+import pickle
+from util import generate_path
 
-compress_img("/img/shooting_img/300212501.jpg", 100, 100)
+list = ["hoge",2,3,4]
+downlink_write = open(generate_path("/src/flow/downlink_status.txt"), "wb")
+pickle.dump(list, downlink_write)
+downlink_write.close()
 
-
-"hoge"
+downlink_read = open(generate_path("/src/flow/downlink_status.txt"), "rb")
+downlink_files = pickle.load(downlink_read)
+downlink_read.close()
+print(downlink_files)
+print(type(downlink_files[0]))
