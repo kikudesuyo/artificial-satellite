@@ -1,3 +1,3 @@
-from downlink.shape_up import output_one_aurora_data
+from analysis.resize import compress_img
 
-print(output_one_aurora_data(1))
+compress_img("/img/shooting_img/300212501.jpg", 100, 100)

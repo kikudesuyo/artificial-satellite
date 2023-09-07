@@ -6,9 +6,10 @@ from flow.analysis import analysis_flow
 from flow.shooting import shooting_flow
 from flow.split import split_flow
 from format.format import send_CMD, from_micon, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER, FORMAT_CMD
-from helper.status_operation import handle_based_on_previous_status, is_equal_command, does_front_handle
+from helper.status_operation import handle_based_on_previous_status, is_equal_command, does_not_background_communicate, does_not_main_communicate
+from helper.file_operation import output_communication_status
 from format.command_list import *
-from constant import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, SAFE
+from constant import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, SAFE, MAIN_COMMUNICATING, BACKGROUND_COMMUNICATING, NONE_COMMUNICATING
 
 def run():
   cmd_list=[]
@@ -34,7 +35,7 @@ def selection(format_array):
       send_CMD(MC_ADDR, CMD_RPI_MC_DATE)
     elif cmd == CMD_GS_RPI_SPLIT:
       print("ACK_RPI_GS_SPLIT")
-      send_CMD(MC_ADDR, ACK_RPI_GS_SPLIT)
+      send_CMD(GS_ADDR, ACK_RPI_GS_SPLIT)
       print("split")
       split_flow()
       print("split_finish")
@@ -56,6 +57,7 @@ def selection(format_array):
       print("power is danger. shut down rpi.")
       send_CMD(EPS_ADDR, ACK_RPI_EPS_SHUTDOWN)
       #shutdown()
+      time.sleep(100)
     elif cmd == ACK_EPS_RPI_POWER_CHECK:
       #撮影後に継続か？
       power = get_data_from_format(format_array)[0]
@@ -69,6 +71,7 @@ def selection(format_array):
     elif cmd == ACK_EPS_RPI_SHUTDOWN:
       print("approved shutdown")
       #shutdown()
+      time.sleep(100)
     else :
       print("NO_CMD")
       
@@ -113,13 +116,30 @@ def interruption(format_array):
       print("background_shut_down")
       send_CMD(EPS_ADDR, ACK_RPI_EPS_SHUTDOWN)
       #shutdown()
+      time.sleep(100)
     
 def main():
+  #send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
   handle_based_on_previous_status()
   try:
     last_format_array = None
     while True:
-      cmd_list=run()
+      i = 0
+      while True:
+        if does_not_background_communicate():#statusファイルの居場所を変更してもいいかも
+          print("break!!")#ここの挙動をraspiで確認した方がいい。一つ上のwhile trueのループがどうまわるか
+          break
+        elif i < 5:#この回数も決めた方がいい。どの程度待ってエラーが起きていると判断するか
+          print("sleep!")
+          i += 1
+        else:
+          print("Error! Background communication does not end or communication_status is not correct!")
+          output_communication_status(NONE_COMMUNICATING)#ここの例外処理の相談した方がいい、例外処理の方法そのものや、例外処理の回数などを相談する。bacgroundも注意
+          break
+        time.sleep(5) #ここの時間は要相談, また、この時命令を送り続けてもらうようにする必要あり
+      output_communication_status(MAIN_COMMUNICATING)
+      cmd_list = run()
+      output_communication_status(NONE_COMMUNICATING)
       for format_array in cmd_list:
         if last_format_array == None:
           selection(format_array)
@@ -138,16 +158,29 @@ def main():
 def background():
   try:
     while True:
-      if does_front_handle():
-        cmd_list = run()
+      i=0
+      while True:
+        if does_not_main_communicate():
+          print("break")
+          break
+        elif i < 5:
+          print("sleep!")
+          i += 1
+        else:
+          print("This is the error! Background communication does not end or communication_status is not correct!")
+          output_communication_status(NONE_COMMUNICATING)#ここの例外処理を相談した方がいい。例外処理の方法そのものや、例外処理の回数を相談する。mainも注意
+          break
+        time.sleep(5) #ここの時間は要相談, また、この時命令を送り続けてもらうようにする必要あり
+        output_communication_status(BACKGROUND_COMMUNICATING)
+        cmd_list=run() #runを書き換えてもいいかも。引数↑で↓は最後に加える
+        output_communication_status(NONE_COMMUNICATING)
         for format_array in cmd_list:
           try:
             interruption(format_array)
           except Exception as e:
             print(e)
             pass
-      else:
-        time.sleep(5)
+        time.sleep(30)
   except Exception as e:
     print(e)
     pass

@@ -39,7 +39,7 @@ def does_front_handle():
   else:
     return False
     
-def main_check_communication_status():
+def does_not_background_communicate():
   with open(generate_path("/src/format/communication_status.txt"), "r") as status_file:
     status = int(status_file.read())
     if status == NONE_COMMUNICATING or status == MAIN_COMMUNICATING:
@@ -48,7 +48,7 @@ def main_check_communication_status():
       return False
     
 
-def background_check_communication_status():
+def does_not_main_communicate():
   with open(generate_path("/src/format/communication_status.txt"), "r") as status_file:
     status = int(status_file.read())
     if status == NONE_COMMUNICATING or status == BACKGROUND_COMMUNICATING:
