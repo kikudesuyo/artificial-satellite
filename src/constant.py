@@ -40,6 +40,10 @@ INIT_ADDR   =   9
 #割り込みピンの設定(BCM)
 INTERRUPT_PIN = 12
 
+#割り込みピンの設定（EPSとの通信用）
+INTERRUPT_PIN_EPS_1 = 24
+INTERRUPT_PIN_EPS_2 = 26
+
 #誤り判定
 BUFFER_SIZE_COM    =  80
 BUFFER_SIZE_EPS    =  80
