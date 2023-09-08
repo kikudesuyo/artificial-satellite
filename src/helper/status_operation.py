@@ -9,7 +9,7 @@ from format.command_list import CMD_RPI_EPS_SHUTDOWN
 from format.format import FORMAT_DATA_START
 
 def output_raspi_status(status):
-  with open(generate_path("/src/format/order.txt"), "w") as status_file:
+  with open(generate_path("/src/status/raspi_status.txt"), "w") as status_file:
     status_file.write(str(status))
     
 def output_communication_status(status):
@@ -17,7 +17,7 @@ def output_communication_status(status):
     status_file.write(str(status))
 
 def handle_based_on_previous_status():
-  with open(generate_path("/src/format/order.txt"), "r") as status_file:
+  with open(generate_path("/src/status/raspi_status.txt"), "r") as status_file:
     status = int(status_file.read())
     if status == SHOOTING_COMPLETION or status == SHOOTING_INTERRUPTION:
       analysis_flow()
@@ -40,7 +40,7 @@ def is_equal_command(format_array, last_format_array):
     return False
   
 def does_front_handle():
-  with open(generate_path("/src/format/order.txt"), "r") as status_file:
+  with open(generate_path("/src/status/raspi_status.txt"), "r") as status_file:
     status = int(status_file.read())
   if status != SHOOTING_COMPLETION and status != OTHERS_COMPLETION:
     return True
@@ -62,4 +62,3 @@ def does_not_main_communicate():
       return True
     elif status == MAIN_COMMUNICATING:
       return False
-
