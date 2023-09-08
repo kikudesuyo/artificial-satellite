@@ -8,6 +8,14 @@ from constant import EPS_ADDR
 from format.command_list import CMD_RPI_EPS_SHUTDOWN
 from format.format import FORMAT_DATA_START
 
+def output_raspi_status(status):
+  with open(generate_path("/src/format/order.txt"), "w") as status_file:
+    status_file.write(str(status))
+    
+def output_communication_status(status):
+  with open(generate_path("/src/format/communication_status.txt"), "w") as status_file:
+    status_file.write(str(status))
+
 def handle_based_on_previous_status():
   with open(generate_path("/src/format/order.txt"), "r") as status_file:
     status = int(status_file.read())
@@ -47,7 +55,6 @@ def does_not_background_communicate():
     elif status == BACKGROUND_COMMUNICATING:
       return False
     
-
 def does_not_main_communicate():
   with open(generate_path("/src/format/communication_status.txt"), "r") as status_file:
     status = int(status_file.read())

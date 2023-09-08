@@ -8,7 +8,7 @@ from flow.shooting import shooting_flow
 from flow.split import split_flow
 from format.format import send_CMD, send_data, from_micon, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER, FORMAT_CMD
 from helper.status_operation import handle_based_on_previous_status, is_equal_command, does_not_background_communicate, does_not_main_communicate
-from helper.file_operation import output_communication_status, output_raspi_status
+from helper.status_operation import output_communication_status, output_raspi_status
 from format.command_list import *
 from constant import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, SAFE, MAIN_COMMUNICATING, BACKGROUND_COMMUNICATING, NONE_COMMUNICATING, OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
 

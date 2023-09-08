@@ -1,8 +1,8 @@
 from shooting.take_photograph import take_photo
-from helper.file_operation import delete_files_amount, output_raspi_status
-from helper.complemention import is_correct_time
+from helper.file_operation import delete_files_amount
+from helper.status_operation import output_raspi_status
+from shooting.check_time import is_correct_time
 from constant import ERROR_VALUE, SHOOTING_COMPLETION, SHOOTING_INTERRUPTION
-
 
 def shooting_flow(time_data):
   """
