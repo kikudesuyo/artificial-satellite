@@ -22,15 +22,15 @@ def get_aurora_data(relative_path):
   splited_string = split_string(all_aurora_data)
   return splited_string
 
-def make_data_for_downlink(file_name):
+def make_data_for_downlink(full_path):
   """１つのパケットを送信用に生成
   Arg:
-    file_name (str): GSからのデータ（ファイル名）
+    full_path (str): GSからのデータ（ファイル名）
 
   Return:
     downlink_data (list[int]): 0~255までの整数型配列
   """
-  with open(generate_path("/data/aurora_data/" + file_name + ".txt"), "r") as aurora_file:
+  with open(generate_path(full_path), "r") as aurora_file:
     aurora_data = aurora_file.read()
     downlink_data = [int(aurora_data[x:x+2], 16) for x in range(0, len(aurora_data), 2)]
   return downlink_data

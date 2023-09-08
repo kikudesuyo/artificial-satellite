@@ -35,10 +35,11 @@ def send_downlink_data(downlink_data):
       for format_array in cmd_list:
         sender = FORMAT_ADRS_SENDER(format_array)
         cmd = format_array[FORMAT_CMD]
-        if sender == MC_ADDR & cmd == ACK_MC_RPI_DONWLINK:
+        if sender == MC_ADDR and cmd == ACK_MC_RPI_DONWLINK:
           output_raspi_status(OTHERS_COMPLETION)
-          break
-      time.sleep(3)
+          print("ダウンリンク成功")
+          return None
+      time.sleep(1)
       count += 1
     if count == 5:
       raise ConnectionError("通信失敗")
@@ -47,8 +48,7 @@ def send_downlink_data(downlink_data):
     print("通信失敗のためシャットダウンします。")
     output_raspi_status(DOWNLINK_INTERRUPTION)
     #shutdown()
-
-
+    
 def selection(format_array):
   sender = FORMAT_ADRS_SENDER(format_array)
   cmd    = format_array[FORMAT_CMD]
@@ -109,11 +109,10 @@ def selection(format_array):
     elif cmd == ACK_MC_RPI_DONWLINK:
       pass
     elif cmd == CMD_MC_RPI_DOWNLINK_FINISH:
-      output_uplink_data(format_array)
       downlink_data = generate_downlink_data()
-      send_downlink_data(downlink_data)
-      renew_downlink_status()
-      output_raspi_status(OTHERS_COMPLETION)
+      #send_downlink_data(downlink_data)
+      #renew_downlink_status()
+      #output_raspi_status(OTHERS_COMPLETION)
       #ダウンリンクステータスの変更をする必要がある
       #送るデータがあるなら要求、ないならシャットダウン(ダウンリンクに関しては２回目以降)
       if downlink_data == []:
@@ -125,6 +124,7 @@ def selection(format_array):
         send_downlink_data(downlink_data)
         renew_downlink_status()
         output_raspi_status(OTHERS_COMPLETION)
+        send_CMD(MC_ADDR, CMD_RPI_MC_DOWNLINK)
     elif cmd == CMD_MC_RPI_SHOOTING:
       #緯度が範囲内になったら撮影
       send_CMD(ACK_RPI_MC_SHOOTING)

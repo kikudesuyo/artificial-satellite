@@ -63,10 +63,10 @@ ANALYSIS_INTERRUPTION = 3
 SPLIT_INTERRUPTION    = 4
 DOWNLINK_INTERRUPTION = 5
 
-#downlink
-AURORA_DATA         = 0
-AURORA_IMG          = 1
-DESIGNED_AURORA_IMG = 2
+#downlink status (designed_files)
+AURORA_DATA         = []
+AURORA_IMG          = 1 #配列の数＝１順番にオーロラ画像のパケットを送信
+DESIGNED_AURORA_IMG = 2 #配列の数＝２
 IMAGE_SEND_COMPLETE = [0]
 
 #電力状態

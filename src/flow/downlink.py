@@ -1,13 +1,10 @@
 import pickle
+import glob
 
-from downlink.shape_up import get_aurora_data, get_splited_data
-from format.format import send_data as communication_main
 from util import delete_files
-from helper.file_operation import output_raspi_status
 from format.format import FORMAT_CMD, FORMAT_DATA_SIZE, FORMAT_DATA_START
 from constant import COM_ADDR, OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
 from constant import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, IMAGE_SEND_COMPLETE
-#from format.YOTSUBA_CMD_RPI import ACK_COM_RPI_DOWNLINK_FINISH, ACK_RPI_COM_DOWNLINK_TIMEOUT
 from downlink.shape_up import make_data_for_downlink
 from util import generate_path
 
@@ -61,8 +58,9 @@ def renew_downlink_status():
 
 def generate_downlink_data():
   status = get_uplink_data()
-  if len(status) == AURORA_DATA:
-    sending_data = make_data_for_downlink("/data/aurora_data/*.txt")
+  if status == AURORA_DATA:
+    file_name = glob.glob(generate_path("/data/aurora_data/*"))[0]
+    sending_data = make_data_for_downlink(file_name)
   elif len(status) == AURORA_IMG:
     if status == IMAGE_SEND_COMPLETE:
       print("complete")
