@@ -2,9 +2,8 @@ import pickle
 import glob
 
 from util import delete_files
-from format.format import FORMAT_CMD, FORMAT_DATA_SIZE, FORMAT_DATA_START
-from constant import COM_ADDR, OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
-from constant import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, IMAGE_SEND_COMPLETE
+from format.format import FORMAT_DATA_SIZE, FORMAT_DATA_START
+from constant import AURORA_DATA, AURORA_IMG, IMAGE_SEND_COMPLETE
 from downlink.shape_up import make_data_for_downlink
 from util import generate_path
 

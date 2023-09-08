@@ -5,7 +5,7 @@ from format.format import send_CMD
 from constant import SHOOTING_COMPLETION, OTHERS_COMPLETION, SHOOTING_INTERRUPTION, ANALYSIS_INTERRUPTION, SPLIT_INTERRUPTION
 from constant import MAIN_COMMUNICATING, BACKGROUND_COMMUNICATING, NONE_COMMUNICATING
 from constant import EPS_ADDR
-from format.YOTSUBA_CMD_RPI import CMD_RPI_EPS_SHUTDOWN
+from format.command_list import CMD_RPI_EPS_SHUTDOWN
 from format.format import FORMAT_DATA_START
 
 def handle_based_on_previous_status():

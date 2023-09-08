@@ -110,9 +110,6 @@ def selection(format_array):
       pass
     elif cmd == CMD_MC_RPI_DOWNLINK_FINISH:
       downlink_data = generate_downlink_data()
-      #send_downlink_data(downlink_data)
-      #renew_downlink_status()
-      #output_raspi_status(OTHERS_COMPLETION)
       #ダウンリンクステータスの変更をする必要がある
       #送るデータがあるなら要求、ないならシャットダウン(ダウンリンクに関しては２回目以降)
       if downlink_data == []:
@@ -146,6 +143,28 @@ def selection(format_array):
       print("NO_CMD")
   else:
     print("no address")
+    
+def main():
+  handle_based_on_previous_status()
+  try:
+    last_format_array = None
+    while True:
+      cmd_list = run()
+      while True:
+        for format_array in cmd_list:
+          if last_format_array == None:
+            selection(format_array)
+            last_format_array = format_array
+          else:
+            if is_equal_command(format_array, last_format_array):
+              print("same command")
+              continue
+            else: 
+              selection(format_array)
+              last_format_array = format_array
+  except Exception as e:
+    print(e)
+    pass
 
 #バックグラウンドのシャットダウン用
 def interruption(format_array):
@@ -157,44 +176,8 @@ def interruption(format_array):
       send_CMD(EPS_ADDR, ACK_RPI_EPS_SHUTDOWN)
       #shutdown()
       time.sleep(100)
-    
-def main():
-  #send_CMD(MC_ADDR,CMD_RPI_MC_POWER_ON)#起動完了
-  handle_based_on_previous_status()
-  try:
-    last_format_array = None
-    while True:
-      i = 0
-      while True:
-        if does_not_background_communicate():#statusファイルの居場所を変更してもいいかも
-          print("break!!")#ここの挙動をraspiで確認した方がいい。一つ上のwhile trueのループがどうまわるか
-          break
-        elif i < 5:#この回数も決めた方がいい。どの程度待ってエラーが起きていると判断するか
-          print("sleep!")
-          i += 1
-        else:
-          print("Error! Background communication does not end or communication_status is not correct!")
-          output_communication_status(NONE_COMMUNICATING)#ここの例外処理の相談した方がいい、例外処理の方法そのものや、例外処理の回数などを相談する。bacgroundも注意
-          break
-        time.sleep(5) #ここの時間は要相談, また、この時命令を送り続けてもらうようにする必要あり
-      output_communication_status(MAIN_COMMUNICATING)
-      cmd_list = run()
-      output_communication_status(NONE_COMMUNICATING)
-      for format_array in cmd_list:
-        if last_format_array == None:
-          selection(format_array)
-          last_format_array = format_array
-        else:
-          if is_equal_command(format_array, last_format_array):
-            print("same command")
-            continue
-          else: 
-            selection(format_array)
-            last_format_array = format_array
-  except Exception as e:
-    print(e)
-    pass
 
+###現段階では使用しない。
 def background():
   try:
     while True:
