@@ -2,8 +2,9 @@ import cv2
 import numpy as np
 import re
 import glob
+from natsort import natsorted
 
-from constant import AURORA_THREHOLD, MAX_HSV_RANGE, MIN_HSV_RANGE, IMAGE_SIZE
+from constant.analysis import AURORA_THREHOLD, MAX_HSV_RANGE, MIN_HSV_RANGE, IMAGE_SIZE
 from util import generate_path
 
 class AuroraAnalysis():
@@ -41,7 +42,7 @@ class AuroraAnalysis():
     img_hsv = cv2.cvtColor(clear_img, cv2.COLOR_BGR2HSV)
     return img_hsv
 
-  def get_aurora_rate(self, img_hsv):
+  def calculate_aurora_rate(self, img_hsv):
     """オーロラの画素の割合を取得
     
     Args:
@@ -55,7 +56,7 @@ class AuroraAnalysis():
     aurora_rate = aurora_pixels / IMAGE_SIZE
     return aurora_rate
 
-  def get_aurora_mean(self, img_hsv):
+  def calculate_aurora_mean(self, img_hsv):
     """オーロラである画素の平均値を取得
     
     Args:
@@ -83,7 +84,7 @@ def convert_hsv_to_bgr(hsv_value):
   bgr_value = cv2.cvtColor(temporary_img.astype(np.uint8), cv2.COLOR_HSV2BGR).flatten()
   return bgr_value
 
-def make_aurora_data_array(img_relative_path):
+def make_aurora_data(img_relative_path):
   """オーロラデータをnumpyに格納
 
   Arg:
@@ -97,18 +98,14 @@ def make_aurora_data_array(img_relative_path):
   """
   analysis = AuroraAnalysis()
   aurora_data_list = np.empty((0, 5), int)
-  img_paths = glob.glob(generate_path(img_relative_path))
+  img_paths = natsorted(glob.glob(generate_path(img_relative_path)))
   for img_path in img_paths:
     img_hsv = analysis.change_color_space(img_path)
-    aurora_rate = analysis.get_aurora_rate(img_hsv)
+    aurora_rate = analysis.calculate_aurora_rate(img_hsv)
     if aurora_rate < AURORA_THREHOLD:
       continue
-    replace_path = re.sub(r"\\", "/", img_path)
-    # file_number → shooting_time
-    # 撮影時刻はファイル名から取得する(numpyに格納するため、int型にしなければいけない)
-    # shooting_time = re.search(r'time_(.+)_number', ).group(1)
-    file_number = int(re.search(r'test(.+).jpg', replace_path).group(1))
-    aurora_mean = np.array(analysis.get_aurora_mean(img_hsv))
-    aurora_data = np.concatenate((np.array([file_number, aurora_rate]), aurora_mean))
+    shooting_time = int(re.sub(r'\D', '', img_path))
+    aurora_mean = np.array(analysis.calculate_aurora_mean(img_hsv))
+    aurora_data = np.concatenate((np.array([shooting_time, aurora_rate]), aurora_mean))
     aurora_data_list = np.append(aurora_data_list, np.array([aurora_data]), axis=0)
   return aurora_data_list
