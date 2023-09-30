@@ -18,7 +18,6 @@ def write_downlink_status(downlink_status):
   with open(generate_path("/src/status/downlink_status.txt"), "w") as status_file:
     status_file.write(str(downlink_status))
 
-    
 def check_status(relative_path):
   """
 

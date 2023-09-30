@@ -17,7 +17,6 @@ def calc_elasped_satellite_time(raw_satellite_time):
   hex_satellite_time = hex(satellite_time)[2:]
   return hex_satellite_time
 
-
 def is_correct_time(satellite_time):
   """衛星時間の正誤判定
 

@@ -11,7 +11,6 @@ def set_eps_callback():
   """起動後"""
   GPIO.add_event_detect(TX_EPS_RX_RPI, GPIO.RISING, callback = callback_eps_shutdown, bouncetime = 60000)
 
-
 def input_from_eps():
   return GPIO.input(TX_EPS_RX_RPI)
 
