@@ -21,9 +21,9 @@ def execute_loop():
     end = time.perf_counter()
     print("end")
     exe_time = end - start
-    print("handle time is: " + str(exe_time))
+    print(f'handle time is {exe_time}')
     sum += end - start
-    file.write(str(i+1) + ": " + str(exe_time) + "\n")
+    file.write(f'{i+1}: {exe_time} \n')
   mean = sum/10
-  file.write("mean: " + str(mean) + "\n\n")
+  file.write(f'mean: {mean} \n\n')
   print(mean)
