@@ -89,3 +89,5 @@ def restore_img(raw_data_relative_path, restore_relative_path, width, height):
     pixel_array = np.append(pixel_array, pixel_element)
   img = np.reshape(pixel_array, (height, width, 3))
   cv2.imwrite(generate_path(restore_relative_path), img)
+
+#a
