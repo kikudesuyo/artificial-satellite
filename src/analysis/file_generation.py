@@ -26,7 +26,11 @@ def split_text_string(data_path, string_length=128):
   split_str = [not_new_line_data[i:i+string_length] for i in range(0, len(not_new_line_data), string_length)]
   count = 1
   for i in split_str:
+<<<<<<< HEAD
     packet = f'{generate_path("/data/aurora_img/")}{count}.txt'
+=======
+    packet = f'{generate_path("/data/aurora_img/packet")}{count}.txt'
+>>>>>>> main
     open(packet, "w").write(i)
     count += 1
 
