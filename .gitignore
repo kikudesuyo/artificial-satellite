@@ -159,5 +159,24 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# for machine learning
+#画像のデータを無視
 predict/
+img/aurora*
+img/downlink_img
+img/test
+img/img_restore.jpg
+img/restoration.jpg
+img/restore_sh.jpg
+
+#テキストデータを無視
+data/binary.txt
+data/downlink_data_sh.txt
+data/downlink_data.txt
+data/execution_time.txt
+data/restore.txt
+
+#実装しないファイルを無視
+src/analysis/brightness_experiment.py
+src/analysis/predict_threhold.py
+src/downlink/downlink.py
+src/analysis/loop.py
