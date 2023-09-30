@@ -109,3 +109,5 @@ def make_aurora_data(img_relative_path):
     aurora_data = np.concatenate((np.array([shooting_time, aurora_rate]), aurora_mean))
     aurora_data_list = np.append(aurora_data_list, np.array([aurora_data]), axis=0)
   return aurora_data_list
+
+#a

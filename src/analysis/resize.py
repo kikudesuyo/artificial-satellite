@@ -12,3 +12,5 @@ def compress_img(minify_img_path, width=1960, height=1080):
   resized_img = cv2.resize(img, (width, height))
   compressed_path = generate_path("/img/downlink_img/compressed_img.jpg")
   cv2.imwrite(compressed_path, resized_img)
+
+#a
