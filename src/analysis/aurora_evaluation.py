@@ -4,7 +4,7 @@ import re
 import glob
 from natsort import natsorted
 
-from constant import AURORA_THREHOLD, MAX_HSV_RANGE, MIN_HSV_RANGE, IMAGE_SIZE
+from constant.analysis import AURORA_THREHOLD, MAX_HSV_RANGE, MIN_HSV_RANGE, IMAGE_SIZE
 from util import generate_path
 
 class AuroraAnalysis():
