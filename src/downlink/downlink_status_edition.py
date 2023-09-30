@@ -1,5 +1,6 @@
 from natsort import natsorted
 import glob
+from util import generate_path
 from constant.status import INIT, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG
 import pickle
 
