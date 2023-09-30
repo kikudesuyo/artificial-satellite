@@ -22,6 +22,19 @@ def get_aurora_data(relative_path):
   splited_string = split_string(all_aurora_data)
   return splited_string
 
+def make_data_for_downlink(absolute_path):
+  """１つのパケットを送信用に生成
+  Arg:
+    absolute_path (int): GSからのデータ（ファイル名）
+
+  Return:
+    downlink_data (list[int]): 0~255までの整数型配列
+  """
+  with open(absolute_path, "r") as aurora_file:
+    aurora_data = aurora_file.read()
+    downlink_data = [int(aurora_data[x:x+2], 16) for x in range(0, len(aurora_data), 2)]
+  return downlink_data
+
 def split_string(string, string_length=128):
   """オーロラデータを配列に格納
 
@@ -94,3 +107,21 @@ def get_splited_data(relative_path):
       text_data = text_file.read()
       splited_data.append(text_data)
   return splited_data
+  
+
+def store_for_downlink(relative_path):
+  """16進数文字列を2文字ごとに分割した後にint型に変換して格納
+
+  Arg:
+    relative_path (str): artificial_satellite/からの相対パス
+  Return:
+    format_data (list[list[str]]): 1バイトを要素とする配列とし、.txtを1つの要素とする2重配列
+      e.g.) format_data = [1.txt, 2.txt, 3.txt, 4.txt]
+            1.txt = [12, 34, 56, 78]
+  """
+  downlink_data = get_splited_data(relative_path)
+  format_data = []
+  for packet in downlink_data:
+    splited_packet = [int(packet[x:x+2], 16) for x in range(0, len(packet), 2)]
+    format_data.append(splited_packet)
+  return format_data
