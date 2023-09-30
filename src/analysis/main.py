@@ -17,3 +17,5 @@ def main():
     hex_value = format(int(raw_value), "x").zfill(2)
     with open(generate_path(f'/data/aurora_data/{date_time}.txt'), "w") as text_file:
       text_file.write(hex_date_time + hex_aurora_percentage + hex_hue + hex_saturation + hex_value)
+
+#a
