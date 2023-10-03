@@ -1,13 +1,8 @@
 from natsort import natsorted
 import glob
 from util import generate_path
-from constant.status import INIT, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG
+from constant.status import INIT, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER, INIT_DESIGNED_NUMS
 import pickle
-
-from util import delete_files
-from constant.format import FORMAT_DATA_SIZE, FORMAT_DATA_START
-from downlink.shape_up import make_data_for_downlink
-from util import generate_path
 
 def write_downlink_status(downlink_status):
   """何をダウンリンクするかをステータスファイルに保存
@@ -18,7 +13,15 @@ def write_downlink_status(downlink_status):
   with open(generate_path("/src/status/downlink_status.txt"), "w") as status_file:
     status_file.write(str(downlink_status))
 
-    
+def write_designed_nums(file_nums):
+  """
+  Arg:
+  file_nums (list[int])
+  """
+  designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "wb")
+  pickle.dump(file_nums, designed_img_file)
+  designed_img_file.close()
+
 def check_status(relative_path):
   """
 
@@ -93,3 +96,20 @@ def change_status_file(downlink_status):
     designed_img_file.close()
   else:
     print("flow is wrong")
+
+
+def read_designed_packet():
+  designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "rb")
+  designed_files = pickle.load(designed_img_file)
+  designed_img_file.close()
+  return designed_files
+
+def initialize_status():
+  """ダウンリンクに関するステータスを全て初期化"""
+  with open(generate_path("/src/status/downlink_status.txt"), "w") as file:
+    file.write(str(INIT))
+  with open(generate_path("/src/status/aurora_data.txt"), "w") as file:
+    file.write(str(INIT_FILE_NUMBER))
+  with open(generate_path("/src/status/aurora_img.txt"), "w") as file:
+    file.write(str(INIT_FILE_NUMBER))
+  write_designed_nums(INIT_DESIGNED_NUMS)

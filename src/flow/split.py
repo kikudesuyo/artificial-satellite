@@ -6,4 +6,3 @@ def split_flow():
     convert_img_into_text("/img/downlink_img/compressed_img.jpg")
     split_text_string("/data/downlink_data.txt")
     #delete_files("/img/downlink_img")
-    #アップリンクの返答　必要？

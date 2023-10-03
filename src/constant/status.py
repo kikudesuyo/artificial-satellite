@@ -12,6 +12,10 @@ AURORA_DATA           = 1
 AURORA_IMG            = 2
 DESIGNED_AURORA_IMG   = 3
 
+#downlink_status
+INIT_FILE_NUMBER      = 0
+INIT_DESIGNED_NUMS     = []
+
 #uplink data_size
 AURORA_DATA_SIZE         = 0
 AURORA_IMG_SIZE          = 1

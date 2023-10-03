@@ -1,6 +1,3 @@
-import pickle
-
-from util import generate_path
 from constant.format import FORMAT_DATA_SIZE, FORMAT_DATA_START
 from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, AURORA_DATA_SIZE, AURORA_IMG_SIZE, ELEMTNTS_IMG_FILE_NUMBER
 
@@ -28,15 +25,4 @@ def make_img_numbers(format_array):
     if len(raw_img_number) == ELEMTNTS_IMG_FILE_NUMBER:
       img_number = raw_img_number[0]*256 + raw_img_number[1]*16 + raw_img_number[2]
       designed_files.append(img_number)
-  return designed_files
-
-def write_designed_status(file_nums):
-  designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "wb")
-  pickle.dump(file_nums, designed_img_file)
-  designed_img_file.close()
-
-def read_designed_status():
-  designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "rb")
-  designed_files = pickle.load(designed_img_file)
-  designed_img_file.close()
   return designed_files

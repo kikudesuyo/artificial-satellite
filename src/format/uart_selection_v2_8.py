@@ -2,11 +2,11 @@ import time
 
 from util import shutdown
 from flow.analysis import analysis_flow
-from flow.downlink import generate_downlink_data
+from flow.downlink import get_downlink_data
 from flow.shooting import shooting_flow
 from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER
-from helper.status_operation import handle_based_on_previous_status, is_equal_command, does_front_handle
+from helper.status_operation import handle_based_on_previous_status, is_equal_command
 from eps_line import set_eps_callback, input_from_eps, request_shutdown
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, FORMAT_CMD
@@ -21,7 +21,7 @@ class UartSelection:
     self.last_format_array = [0, 0, 0, 0, 0]
     self.downlink_count = 0
     self.downlink_flag = False
-    self.downlink_data = generate_downlink_data()
+    self.downlink_data = get_downlink_data()
 
   def selection(self, format_array):
     sender = FORMAT_ADRS_SENDER(format_array)
@@ -70,7 +70,7 @@ class UartSelection:
         self.downlink_count = 0
         self.downlink_flag = False
         #ダウンリンクが成功したためdownlink_statusを更新する必要がある
-        self.downlink_data = generate_downlink_data()
+        self.downlink_data = get_downlink_data()
       elif cmd == CMD_MC_RPI_DOWNLINK_FINISH:
           #ダウンリンクステータスの変更をする必要がある
           #送るデータがあるなら要求、ないならシャットダウン(ダウンリンクに関しては２回目以降)
