@@ -2,7 +2,6 @@ import subprocess
 import time
 
 from util import generate_path
-from shooting.time_relation import calc_elasped_satellite_time
 
 def take_photo(elasped_time, shooting_times, interval_msec, width_size=1960, height_size=1080):
   """撮影
