@@ -7,9 +7,11 @@ from flow.shooting import shooting_flow
 from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER
 from helper.status_operation import handle_based_on_previous_status, is_equal_command
+from helper.file_operation import output_raspi_status
 from eps_line import set_eps_callback, input_from_eps, request_shutdown
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, FORMAT_CMD
+from constant.status import DOWNLINK_INTERRUPTION
 from constant.eps_relation import SAFE
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_CW_RESET, CMD_RPI_EPS_POWER_CHECK,
   CMD_RPI_MC_DOWNLINK, CMD_RPI_MC_DATE, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, ACK_CW_RPI_RESET, 
@@ -21,7 +23,7 @@ class UartSelection:
     self.last_format_array = [0, 0, 0, 0, 0]
     self.downlink_count = 0
     self.downlink_flag = False
-    self.downlink_data = get_downlink_data()
+    self.downlink_data = None
 
   def selection(self, format_array):
     sender = FORMAT_ADRS_SENDER(format_array)
@@ -35,7 +37,9 @@ class UartSelection:
         print("split_finish")
         request_shutdown()
       elif cmd == CMD_GS_RPI_DOWNLINK: #ダウンリンク指示コマンド
-        #output_uplink_data(format_array)    
+        #output_raspi_status(DOWNLINK_INTERRUPTION)
+        #output_uplink_data(format_array)
+        self.downlink_data = get_downlink_data()
         self.downlink_flag = True
         #renew_downlink_status()
         #output_raspi_status(OTHERS_COMPLETION)
@@ -70,10 +74,12 @@ class UartSelection:
         self.downlink_count = 0
         self.downlink_flag = False
         #ダウンリンクが成功したためdownlink_statusを更新する必要がある
+        #シーケンス番号をみてから更新するためここでは不適切。82行目以降で処理するべき
         self.downlink_data = get_downlink_data()
       elif cmd == CMD_MC_RPI_DOWNLINK_FINISH:
           #ダウンリンクステータスの変更をする必要がある
           #送るデータがあるなら要求、ないならシャットダウン(ダウンリンクに関しては２回目以降)
+          #シーケンス番号を確認してself.downlink_data = get_downlink_data() を更新
         if self.downlink_data == []:
           print("通信終了のためシャットダウンします")
           #shutdown()

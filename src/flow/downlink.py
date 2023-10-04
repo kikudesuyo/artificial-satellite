@@ -23,7 +23,6 @@ def handle_uplink_data(format_array):
   else:
     print("uplink data is broken")
 
-
 def read_file_contents(relative_path):
   with open(generate_path(relative_path), "r") as file:
     file_data = file.read()

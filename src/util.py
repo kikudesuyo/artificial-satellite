@@ -1,6 +1,4 @@
 from pathlib import Path
-import datetime
-import re
 import os
 import shutil
 import glob
@@ -16,15 +14,6 @@ def generate_path(path):
     str: 引数pathへの絶対パス
   """
   return str(Path(__file__).parents[1]) + path
-
-def get_current_time():
-  """実装する際にcurrnt timeではなく撮影した時刻を取得する
-  .nowではなく撮影した画像ファイル名から時刻を取得する
-  """
-  row_time_data = str(datetime.datetime.now())
-  time_data = row_time_data[:row_time_data.find(".")]
-  current_time = re.sub(r"\D", "", time_data)
-  return current_time
 
 def delete_files(directory_path):
   """指定のディレクトリ内に存在するファイルを削除
@@ -42,16 +31,6 @@ def delete_files(directory_path):
     raise IsADirectoryError("Error!!指定したディレクトリの中にディレクトリが存在します。")
   shutil.rmtree(absolute_path)
   os.makedirs(absolute_path)
-
-def set_date_on_raspi(date):
-  """ラズパイの時計合わせ
-
-  Caution:
-    bashコマンドでのみ使用可能
-  Arg:
-    date (str): 'yyyy/mm/dd hh:mm:ss'
-  """
-  subprocess.run(['sudo', 'date', '--set=' + date])
   
 def shutdown():
   """
