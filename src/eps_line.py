@@ -35,4 +35,5 @@ def request_shutdown():
       time.sleep(1)
     if shutdown_count == 5:
       print("shutdown approved")
+      GPIO.output(TX_RPI_RX_EPS, GPIO.HIGH)
       shutdown()

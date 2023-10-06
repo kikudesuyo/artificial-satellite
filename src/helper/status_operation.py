@@ -1,4 +1,4 @@
-from util import generate_path, delete_files, shutdown
+from util import generate_path, delete_files
 from flow.analysis import analysis_flow
 from flow.split import split_flow
 from format.format import send_CMD

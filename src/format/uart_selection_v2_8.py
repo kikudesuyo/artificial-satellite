@@ -1,6 +1,5 @@
 import time
 
-from util import shutdown
 from flow.analysis import analysis_flow
 from flow.downlink import get_downlink_data
 from flow.shooting import shooting_flow
@@ -11,7 +10,7 @@ from helper.file_operation import output_raspi_status
 from eps_line import set_eps_callback, input_from_eps, request_shutdown
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, FORMAT_CMD
-from constant.status import DOWNLINK_INTERRUPTION
+from constant.status import OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
 from constant.eps_relation import SAFE
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_CW_RESET, CMD_RPI_EPS_POWER_CHECK,
   CMD_RPI_MC_DOWNLINK, CMD_RPI_MC_DATE, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, ACK_CW_RPI_RESET, 
@@ -35,14 +34,12 @@ class UartSelection:
         print("split")
         split_flow()
         print("split_finish")
-        request_shutdown()
+        #request_shutdown()
       elif cmd == CMD_GS_RPI_DOWNLINK: #ダウンリンク指示コマンド
-        #output_raspi_status(DOWNLINK_INTERRUPTION)
-        #output_uplink_data(format_array)
+        output_raspi_status(DOWNLINK_INTERRUPTION)
         self.downlink_data = get_downlink_data()
         self.downlink_flag = True
         #renew_downlink_status()
-        #output_raspi_status(OTHERS_COMPLETION)
         print("downlink first time")
       else :
         print("NO_CMD")
@@ -63,7 +60,7 @@ class UartSelection:
           print("analysis finish")
         else:
           print("power is danger. shutdown preparation.")
-        request_shutdown()
+        #request_shutdown()
       else :
         print("NO_CMD")
         
