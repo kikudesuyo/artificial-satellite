@@ -13,7 +13,7 @@ from constant.format import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, FORMAT_CMD
 from constant.status import OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
 from constant.eps_relation import SAFE
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_CW_RESET, CMD_RPI_EPS_POWER_CHECK,
-  CMD_RPI_MC_DOWNLINK, CMD_RPI_MC_DATE, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, ACK_CW_RPI_RESET, 
+  CMD_RPI_MC_DOWNLINK, CMD_RPI_MC_DATE, ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, ACK_CW_RPI_RESET, 
   ACK_EPS_RPI_POWER_CHECK, CMD_MC_RPI_CW_DATA, ACK_MC_RPI_DOWNLINK, CMD_MC_RPI_DOWNLINK_FINISH,
   ACK_MC_RPI_DATE)
 
@@ -23,6 +23,8 @@ class UartSelection:
     self.downlink_count = 0
     self.downlink_flag = False
     self.downlink_data = None
+    self.shooting_initial_time = 0
+    self.time_data = 0
 
   def selection(self, format_array):
     sender = FORMAT_ADRS_SENDER(format_array)
@@ -68,7 +70,7 @@ class UartSelection:
         
     elif sender == MC_ADDR:
       if cmd == CMD_MC_RPI_CW_DATA:
-        send_CMD(CW_ADDR, CMD_RPI_CW_RESET)
+        send_CMD(MC_ADDR, ACK_RPI_MC_CW_DATA)
       elif cmd == ACK_MC_RPI_DOWNLINK:
         self.downlink_count = 0
         self.downlink_flag = False
