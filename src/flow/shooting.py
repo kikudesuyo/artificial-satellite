@@ -13,7 +13,7 @@ def shooting_flow(time_data):
   output_raspi_status(SHOOTING_INTERRUPTION)
   try:
     is_correct_time(time_data)
-    satellite_time = time_data[0]*7*24*60*60 + time_data[1]*60*60 + time_data[2]*60 + int(time_data[3])
+    satellite_time = time_data[0]*7*24*60*60 + time_data[1]*60*60 + time_data[2]*60 + time_data[3]
   except:
     satellite_time = ERROR_VALUE
   delete_files_amount( "/img/shooting_img", threshold=2500)
