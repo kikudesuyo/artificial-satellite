@@ -7,7 +7,7 @@ from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER
 from helper.status_operation import handle_based_on_previous_status, is_equal_command
 from helper.file_operation import output_raspi_status
-from eps_line import set_eps_callback, input_from_eps, request_shutdown
+from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, FORMAT_CMD
 from constant.status import OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
@@ -34,7 +34,7 @@ class UartSelection:
         print("split")
         split_flow()
         print("split_finish")
-        #request_shutdown()
+        #request_shutdown_flow()
       elif cmd == CMD_GS_RPI_DOWNLINK: #ダウンリンク指示コマンド
         output_raspi_status(DOWNLINK_INTERRUPTION)
         self.downlink_data = get_downlink_data()
@@ -58,9 +58,11 @@ class UartSelection:
           print("analysis_start")
           analysis_flow()
           print("analysis finish")
+          request_shutdown_flow()
         else:
           print("power is danger. shutdown preparation.")
-        #request_shutdown()
+          
+        #request_shutdown_flow()
       else :
         print("NO_CMD")
         
@@ -140,6 +142,7 @@ class UartSelection:
           self.downlink_flag = False
           print("fail communication")
           print("shut down")
+          request_shutdown_flow()
         print_0xdata(self.last_format_array)
         print("=======finsh_handle_CMD=======")
         print()

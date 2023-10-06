@@ -18,11 +18,9 @@ def input_from_eps():
 def ack_shooting_request():
   GPIO.output(TX_RPI_RX_EPS, GPIO.HIGH)
 
-def request_shutdown():
+def request_shutdown_flow():
+  """ラズパイからのシャッtダウン要求"""
   GPIO.output(TX_RPI_RX_EPS, GPIO.HIGH)
-
-def request_shutdown():
-  request_shutdown()
   shutdown_count = 0
   while True:
     if input_from_eps():
@@ -35,5 +33,4 @@ def request_shutdown():
       time.sleep(1)
     if shutdown_count == 5:
       print("shutdown approved")
-      GPIO.output(TX_RPI_RX_EPS, GPIO.HIGH)
       shutdown()
