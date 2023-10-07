@@ -11,13 +11,11 @@ from helper.file_operation import output_raspi_status
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, FORMAT_CMD
-from constant.status import SHOOTING_COMPLETION, OTHERS_COMPLETION, SHOOTING_INTERRUPTION, DOWNLINK_INTERRUPTION
+from constant.status import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, DOWNLINK_INTERRUPTION
 from constant.shooting import INITIAL_TIMESTAMP
-from constant.eps_relation import SAFE
-from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_CW_RESET, CMD_RPI_EPS_POWER_CHECK,
-  CMD_RPI_MC_DOWNLINK, CMD_RPI_MC_DATE, ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, ACK_CW_RPI_RESET, 
-  ACK_EPS_RPI_POWER_CHECK, CMD_MC_RPI_CW_DATA, ACK_MC_RPI_DOWNLINK, CMD_MC_RPI_DOWNLINK_FINISH,
-  ACK_MC_RPI_DATE)
+from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_EPS_POWER_CHECK, CMD_RPI_MC_DOWNLINK,
+CMD_RPI_MC_DATE, ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, CMD_GS_RPI_ANALYSIS,
+ACK_CW_RPI_RESET, CMD_MC_RPI_CW_DATA, ACK_MC_RPI_DOWNLINK, CMD_MC_RPI_DOWNLINK_FINISH, ACK_MC_RPI_DATE)
 
 class UartSelection:
   def __init__(self):
@@ -26,7 +24,6 @@ class UartSelection:
     self.downlink_flag = False
     self.downlink_data = None
     self.initial_timestamp = INITIAL_TIMESTAMP
-    self.time_data = 0
 
   def selection(self, format_array):
     sender = FORMAT_ADRS_SENDER(format_array)
@@ -45,6 +42,8 @@ class UartSelection:
         self.downlink_flag = True
         #renew_downlink_status()
         print("downlink first time")
+      elif cmd == CMD_GS_RPI_ANALYSIS:
+        analysis_flow()
       else :
         print("NO_CMD")
 
@@ -52,22 +51,6 @@ class UartSelection:
       if cmd == ACK_CW_RPI_RESET:
         print("CW received reset.")
       else:
-        print("NO_CMD")
-
-    elif sender == EPS_ADDR:
-      if cmd == ACK_EPS_RPI_POWER_CHECK:
-        #撮影後に継続か？
-        power = get_data_from_format(format_array)[0]
-        if power == SAFE:
-          print("analysis_start")
-          analysis_flow()
-          print("analysis finish")
-          request_shutdown_flow()
-        else:
-          print("power is danger. shutdown preparation.")
-          
-        #request_shutdown_flow()
-      else :
         print("NO_CMD")
         
     elif sender == MC_ADDR:
@@ -97,7 +80,6 @@ class UartSelection:
         print("satellite reached a designed lattitude.")
         shooting_flow()
         print("shooting finish")
-        send_CMD(EPS_ADDR, CMD_RPI_EPS_POWER_CHECK)
       elif cmd == ACK_MC_RPI_DATE:
         #予約コマンドから時刻データを取得後撮影          
         mc_time_data = get_data_from_format(format_array)
@@ -131,8 +113,6 @@ class UartSelection:
       #handle_based_on_previous_status()
       print("previous_status")
       #解析を行うかどうかを確認する
-      if  1==0:
-        analysis_flow()
     while True:
       print("========CMD_LIST========")
       cmd_list = run()
