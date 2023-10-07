@@ -2,10 +2,11 @@ import cv2
 import numpy as np
 import re
 import glob
+import os
 from natsort import natsorted
 
 from constant.analysis import AURORA_THREHOLD, MAX_HSV_RANGE, MIN_HSV_RANGE, IMAGE_SIZE
-from util import generate_path
+from util import generate_path, copy_file
 
 class AuroraAnalysis():
   
@@ -105,6 +106,10 @@ def make_aurora_data(img_relative_path):
     if aurora_rate < AURORA_THREHOLD:
       continue
     shooting_time = int(re.sub(r'\D', '', img_path))
+    #更新する条件を下に記述(現段階では最初の画像のみを保存)
+    files = os.listdir(generate_path("/img/downlink_img"))
+    if len(files) != 1:
+      copy_file(img_path, generate_path(f"/img/downlink_img/{shooting_time}.jpg"))
     aurora_mean = np.array(analysis.calculate_aurora_mean(img_hsv))
     aurora_data = np.concatenate((np.array([shooting_time, aurora_rate]), aurora_mean))
     aurora_data_list = np.append(aurora_data_list, np.array([aurora_data]), axis=0)

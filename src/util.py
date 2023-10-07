@@ -40,6 +40,10 @@ def shutdown():
   """
   subprocess.run(['sudo', 'shutdown', 'now'])
   
+def copy_file(source_path, copy_path):
+  subprocess.run(["cp", source_path, copy_path])
+  
+
 def convert_datetime_to_hex_seconds(datetime = "DDhhmmss"):
   day = int(datetime[:2])
   hour = int(datetime[2:4])
