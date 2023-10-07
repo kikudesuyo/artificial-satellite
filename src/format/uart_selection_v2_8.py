@@ -3,6 +3,7 @@ import time
 from flow.analysis import analysis_flow
 from flow.downlink import get_downlink_data
 from flow.shooting import shooting_flow
+from shooting.time_relation import decrypt_to_satellite_time, is_shooting
 from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER
 from helper.status_operation import handle_based_on_previous_status, is_equal_command
@@ -10,7 +11,8 @@ from helper.file_operation import output_raspi_status
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, FORMAT_CMD
-from constant.status import OTHERS_COMPLETION, DOWNLINK_INTERRUPTION
+from constant.status import SHOOTING_COMPLETION, OTHERS_COMPLETION, SHOOTING_INTERRUPTION, DOWNLINK_INTERRUPTION
+from constant.shooting import INITIAL_TIMESTAMP
 from constant.eps_relation import SAFE
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_CW_RESET, CMD_RPI_EPS_POWER_CHECK,
   CMD_RPI_MC_DOWNLINK, CMD_RPI_MC_DATE, ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, ACK_CW_RPI_RESET, 
@@ -23,7 +25,7 @@ class UartSelection:
     self.downlink_count = 0
     self.downlink_flag = False
     self.downlink_data = None
-    self.shooting_initial_time = 0
+    self.initial_timestamp = INITIAL_TIMESTAMP
     self.time_data = 0
 
   def selection(self, format_array):
@@ -90,17 +92,24 @@ class UartSelection:
       elif cmd == CMD_MC_RPI_SHOOTING:
         #緯度が範囲内になったら撮影
         send_CMD(ACK_RPI_MC_SHOOTING)
-        time_data = get_data_from_format(format_array)
-        print(time_data)
+        mc_time_data = get_data_from_format(format_array)
+        print(mc_time_data)
         print("satellite reached a designed lattitude.")
         shooting_flow()
         print("shooting finish")
         send_CMD(EPS_ADDR, CMD_RPI_EPS_POWER_CHECK)
       elif cmd == ACK_MC_RPI_DATE:
-        #予約コマンドから時刻データを取得後撮影
-        time_data = get_data_from_format(format_array)
-        print(time_data)
-        shooting_flow(time_data)
+        #予約コマンドから時刻データを取得後撮影          
+        mc_time_data = get_data_from_format(format_array)
+        satellite_time = decrypt_to_satellite_time(mc_time_data)
+        if self.initial_timestamp == INITIAL_TIMESTAMP:
+          self.initial_timestamp = satellite_time
+        if is_shooting(self.initial_timestamp, satellite_time):
+          shooting_flow(satellite_time)
+          print("SHOOTING_FINISH")
+          output_raspi_status(SHOOTING_COMPLETION)
+        else:
+          request_shutdown_flow()
         print("SHOOTING_FINISH")
         #解析継続可能かどうか尋ねる
         send_CMD(EPS_ADDR, CMD_RPI_EPS_POWER_CHECK)
@@ -116,6 +125,7 @@ class UartSelection:
     set_eps_callback()
     if eps_input_status:
       print("shooting_from_EPS")
+      output_raspi_status(SHOOTING_INTERRUPTION)
       send_CMD(MC_ADDR, CMD_RPI_MC_DATE)
     else:
       #handle_based_on_previous_status()

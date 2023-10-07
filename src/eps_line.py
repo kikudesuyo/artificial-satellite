@@ -19,7 +19,7 @@ def ack_shooting_request():
   GPIO.output(TX_RPI_RX_EPS, GPIO.HIGH)
 
 def request_shutdown_flow():
-  """ラズパイからのシャッtダウン要求"""
+  """ラズパイからのシャットダウン要求"""
   GPIO.output(TX_RPI_RX_EPS, GPIO.HIGH)
   shutdown_count = 0
   while True:
