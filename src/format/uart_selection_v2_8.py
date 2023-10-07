@@ -23,6 +23,7 @@ class UartSelection:
     self.downlink_count = 0
     self.downlink_flag = False
     self.downlink_data = None
+    self.downlink_sequence_num = 0
     self.initial_timestamp = INITIAL_TIMESTAMP
 
   def selection(self, format_array):
@@ -57,21 +58,17 @@ class UartSelection:
       if cmd == CMD_MC_RPI_CW_DATA:
         send_CMD(MC_ADDR, ACK_RPI_MC_CW_DATA)
       elif cmd == ACK_MC_RPI_DOWNLINK:
-        self.downlink_count = 0
-        self.downlink_flag = False
-        #ダウンリンクが成功したためdownlink_statusを更新する必要がある
-        #シーケンス番号をみてから更新するためここでは不適切。82行目以降で処理するべき
-        self.downlink_data = get_downlink_data()
+        mc_sequence_num = get_data_from_format(format_array)[0]
+        if mc_sequence_num == self.downlink_sequence_num:
+          self.downlink_sequence_num = int(not self.downlink_sequence_num)
+          self.downlink_data = get_downlink_data()
+          self.downlink_count = 0
       elif cmd == CMD_MC_RPI_DOWNLINK_FINISH:
-          #ダウンリンクステータスの変更をする必要がある
-          #送るデータがあるなら要求、ないならシャットダウン(ダウンリンクに関しては２回目以降)
-          #シーケンス番号を確認してself.downlink_data = get_downlink_data() を更新
-        if self.downlink_data == []:
-          print("通信終了のためシャットダウンします")
-          #shutdown()
-        else:
-          self.downlink_flag = True
+        if self.downlink_flag:
           print("donwnlik multiple times")
+        else:
+          print("通信終了のためシャットダウンします")
+          #request_shutdown_flow()
       elif cmd == CMD_MC_RPI_SHOOTING:
         #緯度が範囲内になったら撮影
         send_CMD(ACK_RPI_MC_SHOOTING)
@@ -92,9 +89,6 @@ class UartSelection:
           output_raspi_status(SHOOTING_COMPLETION)
         else:
           request_shutdown_flow()
-        print("SHOOTING_FINISH")
-        #解析継続可能かどうか尋ねる
-        send_CMD(EPS_ADDR, CMD_RPI_EPS_POWER_CHECK)
       else :
         print("NO_CMD")
     else:
@@ -127,7 +121,7 @@ class UartSelection:
           self.selection(format_array)
           self.last_format_array = format_array
       if self.downlink_flag:
-        send_data(MC_ADDR, CMD_RPI_MC_DOWNLINK, self.downlink_data)
+        send_data(MC_ADDR, CMD_RPI_MC_DOWNLINK, [self.downlink_sequence_num] + self.downlink_data)
         self.downlink_count += 1
         if self.downlink_count == 5:
           self.downlink_count = 0
