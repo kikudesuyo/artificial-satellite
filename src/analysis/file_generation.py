@@ -30,7 +30,7 @@ def split_text_string(data_path, split_data_directory, string_length=128):
   file_name = 1
   for element_index in splited_data:
     header = str(hex(file_name)[2:]).zfill(6)
-    packet = f'{generate_path(split_data_directory)}{file_name}.txt'
+    packet = f'{generate_path(split_data_directory)}/{file_name}.txt'
     open(packet, "w").write(header + element_index)
     file_name += 1
 

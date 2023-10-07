@@ -2,6 +2,4 @@
 # main()
 
 from flow.split import split_flow
-
-
 split_flow()
