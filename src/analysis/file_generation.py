@@ -67,9 +67,7 @@ def convert_img_into_text(relative_img_path, relative_text_path):
   hex_img_data = ""
   flatten_array = img.ravel()
   for element in flatten_array:
-    hex_element = format(element, "x")
-    if len(hex_element) == 1:
-      hex_element = "0" + hex_element
+    hex_element = format(element, "x").zfill(2)
     hex_img_data += hex_element
   with open(generate_path(relative_text_path), "w") as img_text_file:
     img_text_file.write(hex_img_data)
