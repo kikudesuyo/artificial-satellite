@@ -31,7 +31,7 @@ def decrypt_to_satellite_time(time_data):
   satellite_time = time_data[0]*7*24*60*60 + time_data[1]*60*60 + time_data[2]*60 + time_data[3]
   return satellite_time
 
-def is_shooting(start_time, current_time):
+def is_continuing_shooting(start_time, current_time):
   """撮影継続か
   
   Args:
