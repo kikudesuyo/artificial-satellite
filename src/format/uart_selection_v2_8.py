@@ -10,7 +10,7 @@ from helper.status_operation import handle_based_on_previous_status, is_equal_co
 from helper.file_operation import output_raspi_status
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
-from constant.format import GS_ADDR, CW_ADDR, MC_ADDR, FORMAT_CMD
+from constant.format import GS_ADDR, CW_ADDR, MC_ADDR, FORMAT_CMD, INITIAL_SEQUENCE_FLAG
 from constant.status import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, DOWNLINK_INTERRUPTION
 from constant.shooting import INITIAL_TIMESTAMP
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_MC_DOWNLINK,CMD_RPI_MC_DATE,
@@ -23,7 +23,7 @@ class UartSelection:
     self.downlink_count = 0
     self.downlink_flag = False
     self.downlink_data = None
-    self.downlink_sequence_num = 0
+    self.downlink_sequence_flag = INITIAL_SEQUENCE_FLAG
     self.initial_timestamp = INITIAL_TIMESTAMP
 
   def selection(self, format_array):
@@ -63,8 +63,8 @@ class UartSelection:
         send_CMD(MC_ADDR, ACK_RPI_MC_CW_DATA)
       elif cmd == ACK_MC_RPI_DOWNLINK:
         mc_sequence_num = get_data_from_format(format_array)[0]
-        if mc_sequence_num == self.downlink_sequence_num:
-          self.downlink_sequence_num = int(not self.downlink_sequence_num)
+        if mc_sequence_num == self.downlink_sequence_flag:
+          self.downlink_sequence_flag = not self.downlink_sequence_flag
           self.downlink_data = get_downlink_data()
           self.downlink_count = 0
       elif cmd == CMD_MC_RPI_DOWNLINK_FINISH:
@@ -125,7 +125,7 @@ class UartSelection:
           self.selection(format_array)
           self.last_format_array = format_array
       if self.downlink_flag:
-        send_data(MC_ADDR, CMD_RPI_MC_DOWNLINK, [self.downlink_sequence_num] + self.downlink_data)
+        send_data(MC_ADDR, CMD_RPI_MC_DOWNLINK, [int(self.downlink_sequence_flag)] + self.downlink_data)
         self.downlink_count += 1
         if self.downlink_count == 5:
           self.downlink_count = 0

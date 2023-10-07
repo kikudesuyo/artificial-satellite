@@ -32,3 +32,7 @@ DATA_OVERFLOW   =   0
 DATA_CRC_ERROR  =   2
 DATA_ADRS_ERROR =   3
 DATA_TIMEOUT    =   4
+
+
+#MCとのシーケンス番号の確認
+INITIAL_SEQUENCE_FLAG = False
