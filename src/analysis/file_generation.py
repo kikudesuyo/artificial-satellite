@@ -5,12 +5,13 @@ from natsort import natsorted
 
 from util import generate_path
 
-def split_text_string(data_path, string_length=128):
+def split_text_string(data_path, split_data_directory, string_length=128):
   """.txtファイル内の文字列をn文字ごとに分割
     分割して生成されたデータのヘッダーに分割番号を追加
 
   Args:
       data_path (str): artificial_satellite/からの相対パス
+      split_data_directory (str): artificial_satellite/からの相対パス
       string_length (int): 指定の文字数で分割
       
   Caution:
@@ -29,7 +30,7 @@ def split_text_string(data_path, string_length=128):
   file_name = 1
   for element_index in splited_data:
     header = str(hex(file_name)[2:]).zfill(6)
-    packet = f'{generate_path("/data/aurora_img/")}{file_name}.txt'
+    packet = f'{generate_path(split_data_directory)}{file_name}.txt'
     open(packet, "w").write(header + element_index)
     file_name += 1
 
