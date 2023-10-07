@@ -63,7 +63,7 @@ class UartSelection:
         send_CMD(MC_ADDR, ACK_RPI_MC_CW_DATA)
       elif cmd == ACK_MC_RPI_DOWNLINK:
         mc_sequence_num = get_data_from_format(format_array)[0]
-        if mc_sequence_num == self.downlink_sequence_flag:
+        if mc_sequence_num == int(self.downlink_sequence_flag):
           self.downlink_sequence_flag = not self.downlink_sequence_flag
           self.downlink_data = get_downlink_data()
           self.downlink_count = 0
