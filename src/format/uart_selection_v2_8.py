@@ -3,7 +3,7 @@ import time
 from flow.analysis import analysis_flow
 from flow.downlink import get_downlink_data
 from flow.shooting import shooting_flow
-from shooting.time_relation import decrypt_to_satellite_time, is_shooting
+from shooting.time_relation import decrypt_to_satellite_time, is_continuing_shooting
 from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER
 from helper.status_operation import handle_based_on_previous_status, is_equal_command
@@ -104,7 +104,7 @@ class UartSelection:
         satellite_time = decrypt_to_satellite_time(mc_time_data)
         if self.initial_timestamp == INITIAL_TIMESTAMP:
           self.initial_timestamp = satellite_time
-        if is_shooting(self.initial_timestamp, satellite_time):
+        if is_continuing_shooting(self.initial_timestamp, satellite_time):
           shooting_flow(satellite_time)
           print("SHOOTING_FINISH")
           output_raspi_status(SHOOTING_COMPLETION)
