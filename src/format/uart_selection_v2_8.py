@@ -10,11 +10,11 @@ from helper.status_operation import handle_based_on_previous_status, is_equal_co
 from helper.file_operation import output_raspi_status
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
-from constant.format import GS_ADDR, CW_ADDR, EPS_ADDR, MC_ADDR, FORMAT_CMD
+from constant.format import GS_ADDR, CW_ADDR, MC_ADDR, FORMAT_CMD
 from constant.status import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, DOWNLINK_INTERRUPTION
 from constant.shooting import INITIAL_TIMESTAMP
-from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_EPS_POWER_CHECK, CMD_RPI_MC_DOWNLINK,
-CMD_RPI_MC_DATE, ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, CMD_GS_RPI_ANALYSIS,
+from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_MC_DOWNLINK,CMD_RPI_MC_DATE,
+ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, CMD_GS_RPI_ANALYSIS,
 ACK_CW_RPI_RESET, CMD_MC_RPI_CW_DATA, ACK_MC_RPI_DOWNLINK, CMD_MC_RPI_DOWNLINK_FINISH, ACK_MC_RPI_DATE)
 
 class UartSelection:
