@@ -44,7 +44,11 @@ class UartSelection:
         #renew_downlink_status()
         print("downlink first time")
       elif cmd == CMD_GS_RPI_ANALYSIS:
+        print("analysis start")
         analysis_flow()
+        print("analysis finish")
+        print("request shutdown")
+        request_shutdown_flow()
       else :
         print("NO_CMD")
 
