@@ -18,6 +18,7 @@ CMD_RPI_MC_DATE            = 5
 CMD_GS_RPI_SHOOTING        = 2
 CMD_GS_RPI_SPLIT           = 3
 CMD_GS_RPI_DOWNLINK        = 4
+CMD_GS_RPI_ANALYSIS        = 5
 
 ACK_CW_RPI_RESET           = 2
 
