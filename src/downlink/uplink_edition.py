@@ -1,6 +1,6 @@
 from downlink.downlink_status_edition import initialize_status
 from constant.format import FORMAT_DATA_SIZE, FORMAT_DATA_START
-from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, AURORA_DATA_SIZE, AURORA_IMG_SIZE, ELEMTNTS_IMG_FILE_NUMBER
+from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, AURORA_DATA_SIZE, ELEMTNTS_IMG_FILE_NUMBER
 
 def check_uplink_data_type(format_array):
   try:
@@ -16,8 +16,6 @@ def check_uplink_data_type(format_array):
   except:
     initialize_status()
     return None
-
-
 
 def make_img_numbers(format_array):
   data_size = format_array[FORMAT_DATA_SIZE]
