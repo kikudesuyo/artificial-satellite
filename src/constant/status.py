@@ -7,7 +7,7 @@ SPLIT_INTERRUPTION    = 4
 DOWNLINK_INTERRUPTION = 5
 
 #downlink
-INIT                  = 0
+INITIAL_DOWNLINK      = 0
 AURORA_DATA           = 1
 AURORA_IMG            = 2
 DESIGNED_AURORA_IMG   = 3

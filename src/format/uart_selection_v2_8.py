@@ -8,11 +8,11 @@ from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER
 from helper.status_operation import handle_based_on_previous_status, is_equal_command
 from helper.file_operation import output_raspi_status
-from downlink.downlink_status_edition import write_downlink_status
+from downlink.downlink_status_edition import write_downlink_status, change_status_file
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, CW_ADDR, MC_ADDR, FORMAT_CMD, INITIAL_SEQUENCE_FLAG
-from constant.status import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, DOWNLINK_INTERRUPTION
+from constant.status import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, DOWNLINK_INTERRUPTION, INITIAL_DOWNLINK
 from constant.shooting import INITIAL_TIMESTAMP
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_MC_DOWNLINK,CMD_RPI_MC_DATE,
 ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, CMD_GS_RPI_ANALYSIS,
@@ -26,6 +26,7 @@ class UartSelection:
     self.downlink_data = None
     self.downlink_sequence_flag = INITIAL_SEQUENCE_FLAG
     self.initial_timestamp = INITIAL_TIMESTAMP
+    self.downlink_status = INITIAL_DOWNLINK
 
   def selection(self, format_array):
     sender = FORMAT_ADRS_SENDER(format_array)
@@ -40,11 +41,9 @@ class UartSelection:
         #request_shutdown_flow()
       elif cmd == CMD_GS_RPI_DOWNLINK: #ダウンリンク指示コマンド
         output_raspi_status(DOWNLINK_INTERRUPTION)
-        downlink_type = get_data_from_format(format_array)[0]
-        write_downlink_status(str(downlink_type))
+        self.downlink_status = get_data_from_format(format_array)[0]
         self.downlink_data = get_downlink_data()
         self.downlink_flag = True
-        #renew_downlink_status()
         print("downlink first time")
       elif cmd == CMD_GS_RPI_ANALYSIS:
         print("analysis start")
