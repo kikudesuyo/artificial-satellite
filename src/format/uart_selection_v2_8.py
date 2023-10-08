@@ -8,6 +8,7 @@ from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER
 from helper.status_operation import handle_based_on_previous_status, is_equal_command
 from helper.file_operation import output_raspi_status
+from downlink.downlink_status_edition import write_downlink_status
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, CW_ADDR, MC_ADDR, FORMAT_CMD, INITIAL_SEQUENCE_FLAG
@@ -39,6 +40,8 @@ class UartSelection:
         #request_shutdown_flow()
       elif cmd == CMD_GS_RPI_DOWNLINK: #ダウンリンク指示コマンド
         output_raspi_status(DOWNLINK_INTERRUPTION)
+        downlink_type = get_data_from_format(format_array)[0]
+        write_downlink_status(str(downlink_type))
         self.downlink_data = get_downlink_data()
         self.downlink_flag = True
         #renew_downlink_status()

@@ -57,7 +57,7 @@ def get_data_from_format(format_array):
     Arg:
       format_array (list[int]): 通信で形成する型
     Return:
-      data (list[int]): データのみを抽出
+      data (list[int]): format_arrayのデータのみを抽出
     """
     data = format_array[FORMAT_DATA_START: FORMAT_DATA_START + format_array[FORMAT_DATA_SIZE]]
     return data
