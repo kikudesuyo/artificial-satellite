@@ -1,3 +1,4 @@
+from format.format import get_data_from_format
 from downlink.downlink_status_edition import initialize_status
 from constant.format import FORMAT_DATA_SIZE, FORMAT_DATA_START
 from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, AURORA_DATA_SIZE, ELEMTNTS_IMG_FILE_NUMBER
@@ -18,6 +19,17 @@ def check_uplink_data_type(format_array):
     return None
 
 def make_img_numbers(format_array):
+  """format_arrayから画像の番号を取得
+  
+  Arg:
+    format_array(list[int])
+  
+  Return:
+    designed_files(list[int])
+
+  Explanation:
+    data_size
+  """
   data_size = format_array[FORMAT_DATA_SIZE]
   if data_size % 3 == 0:
     pass

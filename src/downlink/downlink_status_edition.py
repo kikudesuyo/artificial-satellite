@@ -1,7 +1,7 @@
 from natsort import natsorted
 import glob
 from util import generate_path
-from constant.status import INIT, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER, INIT_DESIGNED_NUMS
+from constant.status import INITIAL_DOWNLINK, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER, INIT_DESIGNED_NUMS
 import pickle
 
 def write_downlink_status(downlink_status):
@@ -50,7 +50,7 @@ def is_continuing_downlink():
     aurora_img_status = check_status("/src/status/aurora_img.txt")
     left_file_qty = file_qty - aurora_img_status
   elif downlink_status == DESIGNED_AURORA_IMG:
-    left_file_qty = len(get_designed_file_number())
+    left_file_qty = len(read_designed_packet())
   elif downlink_status == INIT:
     print("flow is wrong")
     return False
