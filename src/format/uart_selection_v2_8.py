@@ -42,7 +42,7 @@ class UartSelection:
       elif cmd == CMD_GS_RPI_DOWNLINK: #ダウンリンク指示コマンド
         output_raspi_status(DOWNLINK_INTERRUPTION)
         self.downlink_status = get_data_from_format(format_array)[0]
-        self.downlink_data = get_downlink_data()
+        self.downlink_data = get_downlink_data(self.downlink_status)
         self.downlink_flag = True
         print("downlink first time")
       elif cmd == CMD_GS_RPI_ANALYSIS:
@@ -67,7 +67,7 @@ class UartSelection:
         mc_sequence_num = get_data_from_format(format_array)[0]
         if mc_sequence_num == int(self.downlink_sequence_flag):
           self.downlink_sequence_flag = not self.downlink_sequence_flag
-          self.downlink_data = get_downlink_data()
+          self.downlink_data = get_downlink_data(self.downlink_status)
           self.downlink_count = 0
       elif cmd == CMD_MC_RPI_DOWNLINK_FINISH:
         if self.downlink_flag:

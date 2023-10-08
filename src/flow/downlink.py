@@ -9,15 +9,19 @@ def read_file_contents(relative_path):
     file_data = file.read()
   return file_data
 
-def get_downlink_data():
+def get_downlink_data(downlink_status):
   """
+
+  Arg:
+    downlink_status(int): 
+      0:初期値, 1:オーロラデータ, 2:分割画像, 3:分割画像連番
+      
   Return:
     downlink_data(str):
   Warning:
     取得失敗したらstatusファイルを全て初期化
   """
   try:
-    downlink_status = int(read_file_contents("/src/status/downlink_status.txt"))
     if downlink_status == AURORA_DATA:
       aurora_data_status = read_file_contents("/src/status/aurora_data.txt")
       downlink_data = read_file_contents(f"/data/aurora_data/{aurora_data_status}.txt")
