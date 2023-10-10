@@ -1,3 +1,4 @@
+import os
 from util import generate_path
 
 def split_string(string):
@@ -26,7 +27,11 @@ def merge_aurora_data(first_file_name, num_merged_files):
   """
   merged_data = ""
   for file_name in range(first_file_name, first_file_name + num_merged_files):
-    with open(generate_path(f"/data/aurora_data/{file_name}.txt"), "r") as aurora_data_file:
-      aurora_data = aurora_data_file.read()
-    merged_data += aurora_data
+    file_path = generate_path(f"/data/aurora_data/{file_name}.txt")
+    if os.path.exists(file_path):
+      with open(file_path, "r") as aurora_data_file:
+        aurora_data = aurora_data_file.read()
+      merged_data += aurora_data
+    else:
+      return merged_data
   return merged_data
