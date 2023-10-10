@@ -3,7 +3,9 @@ import glob
 from natsort import natsorted
 
 from util import generate_path
-from constant.status import INITIAL_DOWNLINK, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER, INIT_DESIGNED_NUMS
+from constant.status import (INITIAL_DOWNLINK, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER,
+INIT_DESIGNED_NUMS, MERGED_AURORA_DATA_NUMBER)
+
 
 
 def write_to_file(content, relative_file_path):
@@ -71,14 +73,15 @@ def is_continuing_downlink():
     print("downlink finish")
     return False
 
-def count_up(current_count):
-  return current_count + 1
+def count_up(current_count, increment=1):
+  """現在のcountからincrement分だけ増加"""
+  return current_count + increment
 
 def delete_initial_element(list):
   list.pop(0)
   return list
 
-def change_status_file(downlink_status):
+def renew_status_file(downlink_status):
   """ダウンリンク後にstatusを変更
   ファイル数を確認
   """
@@ -86,7 +89,7 @@ def change_status_file(downlink_status):
     with open(generate_path("/src/status/aurora_data.txt"), "r") as aurora_data_status:
       aurora_data_num = aurora_data_status.read()
     with open(generate_path("/src/status/aurora_data.txt"), "w") as aurora_data_status:
-      aurora_data_status.write(str(count_up(int(aurora_data_num))))
+      aurora_data_status.write(str(count_up(int(aurora_data_num), MERGED_AURORA_DATA_NUMBER)))
   elif downlink_status == AURORA_IMG:
     with open(generate_path("/src/status/aurora_img.txt"), "r") as aurora_img_status:
       aurora_img_num = aurora_img_status.read()

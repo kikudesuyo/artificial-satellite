@@ -1,8 +1,7 @@
-from constant.status import AURORA_DATA, AURORA_IMG
-from downlink.shape_up import split_string
 from util import generate_path
+from downlink.shape_up import split_string, merge_aurora_data
 from downlink.status_edition import read_designed_packet, initialize_status
-from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG
+from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, MERGED_AURORA_DATA_NUMBER
 
 def read_file_contents(relative_path):
   with open(generate_path(relative_path), "r") as file:
@@ -24,7 +23,7 @@ def get_downlink_data(downlink_status):
   try:
     if downlink_status == AURORA_DATA:
       aurora_data_status = read_file_contents("/src/status/aurora_data.txt")
-      downlink_data = read_file_contents(f"/data/aurora_data/{aurora_data_status}.txt")
+      downlink_data = merge_aurora_data(first_file_name=aurora_data_status, num_merged_files=MERGED_AURORA_DATA_NUMBER)
     elif downlink_status == AURORA_IMG:
       aurora_img_status = read_file_contents("/src/status/aurora_img.txt")
       downlink_data = read_file_contents(f"/data/aurora_img/{aurora_img_status}.txt")

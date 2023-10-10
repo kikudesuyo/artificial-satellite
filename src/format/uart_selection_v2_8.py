@@ -7,7 +7,7 @@ from shooting.time_relation import decrypt_to_satellite_time, is_continuing_shoo
 from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER
 from downlink.uplink_edition import write_uplink_data_to_status
-from downlink.status_edition import change_status_file, initialize_status
+from downlink.status_edition import renew_status_file, initialize_status
 from helper.status_operation import is_equal_command
 from helper.file_operation import output_raspi_status
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
@@ -69,7 +69,7 @@ class UartSelection:
         mc_sequence_num = get_data_from_format(format_array)[0]
         if mc_sequence_num == int(self.downlink_sequence_flag):
           self.downlink_sequence_flag = not self.downlink_sequence_flag
-          change_status_file(self.downlink_status)
+          renew_status_file(self.downlink_status)
           self.downlink_data = get_downlink_data(self.downlink_status)
           self.downlink_count = 0
       elif cmd == CMD_MC_RPI_DOWNLINK_FINISH:

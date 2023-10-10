@@ -22,3 +22,6 @@ AURORA_IMG_SIZE          = 1
 
 #Elements to generate aurora_img_numbers
 ELEMTNTS_IMG_FILE_NUMBER       = 3
+
+#aurora_dataの結合数
+MERGED_AURORA_DATA_NUMBER = 3
