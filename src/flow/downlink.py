@@ -1,7 +1,7 @@
 from constant.status import AURORA_DATA, AURORA_IMG
 from downlink.shape_up import split_string
 from util import generate_path
-from downlink.downlink_status_edition import read_designed_packet, initialize_status
+from downlink.status_edition import read_designed_packet, initialize_status
 from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG
 
 def read_file_contents(relative_path):
@@ -15,7 +15,7 @@ def get_downlink_data(downlink_status):
   Arg:
     downlink_status(int): 
       0:初期値, 1:オーロラデータ, 2:分割画像, 3:分割画像連番
-      
+
   Return:
     downlink_data(str):
   Warning:
