@@ -6,13 +6,14 @@ from flow.shooting import shooting_flow
 from shooting.time_relation import decrypt_to_satellite_time, is_continuing_shooting
 from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, print_0xdata, FORMAT_ADRS_SENDER
-from helper.status_operation import handle_based_on_previous_status, is_equal_command
+from downlink.uplink_edition import write_uplink_data_to_status
+from downlink.status_edition import initialize_status
+from helper.status_operation import is_equal_command
 from helper.file_operation import output_raspi_status
-from downlink.downlink_status_edition import write_downlink_status, change_status_file
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, CW_ADDR, MC_ADDR, FORMAT_CMD, INITIAL_SEQUENCE_FLAG
-from constant.status import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, DOWNLINK_INTERRUPTION, INITIAL_DOWNLINK
+from constant.status import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, DOWNLINK_INTERRUPTION, INITIAL_DOWNLINK, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG
 from constant.shooting import INITIAL_TIMESTAMP
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_MC_DOWNLINK,CMD_RPI_MC_DATE,
 ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, CMD_GS_RPI_ANALYSIS,
@@ -42,6 +43,7 @@ class UartSelection:
       elif cmd == CMD_GS_RPI_DOWNLINK: #ダウンリンク指示コマンド
         output_raspi_status(DOWNLINK_INTERRUPTION)
         self.downlink_status = get_data_from_format(format_array)[0]
+        write_uplink_data_to_status(self.downlink_status, format_array)
         self.downlink_data = get_downlink_data(self.downlink_status)
         self.downlink_flag = True
         print("downlink first time")
@@ -134,6 +136,7 @@ class UartSelection:
           self.downlink_flag = False
           print("fail communication")
           print("shut down")
+          initialize_status()
           request_shutdown_flow()
         print_0xdata(self.last_format_array)
         print("=======finsh_handle_CMD=======")

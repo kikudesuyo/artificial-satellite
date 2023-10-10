@@ -6,6 +6,8 @@ FORMAT_ADRS             =   0
 FORMAT_CMD              =   1
 FORMAT_DATA_SIZE        =   2
 FORMAT_DATA_START       =   3
+#ダウンリンクのデータの型指定
+FORMAT_DOWNLINK_TYPE = 4
 
 #address 
 GS_ADDR     =   0 
@@ -36,3 +38,4 @@ DATA_TIMEOUT    =   4
 
 #MCとのシーケンス番号の確認
 INITIAL_SEQUENCE_FLAG = False
+

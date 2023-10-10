@@ -1,17 +1,14 @@
-from natsort import natsorted
+import pickle
 import glob
+from natsort import natsorted
+
 from util import generate_path
 from constant.status import INITIAL_DOWNLINK, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER, INIT_DESIGNED_NUMS
-import pickle
 
-def write_downlink_status(downlink_status):
-  """何をダウンリンクするかをステータスファイルに保存
-  
-  Arg:
-    downlink_status (int):
-  """
-  with open(generate_path("/src/status/downlink_status.txt"), "w") as status_file:
-    status_file.write(str(downlink_status))
+
+def write_to_file(content, relative_file_path):
+  with open(generate_path(relative_file_path), "w") as file:
+    file.write(content)
 
 def write_designed_nums(file_nums):
   """
@@ -21,6 +18,15 @@ def write_designed_nums(file_nums):
   designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "wb")
   pickle.dump(file_nums, designed_img_file)
   designed_img_file.close()
+
+def write_downlink_status(downlink_status):
+  """何をダウンリンクするかをステータスファイルに保存
+  
+  Arg:
+    downlink_status (int):
+  """
+  with open(generate_path("/src/status/downlink_status.txt"), "w") as status_file:
+    status_file.write(str(downlink_status))
 
 def check_status(relative_path):
   """
@@ -51,12 +57,12 @@ def is_continuing_downlink():
     left_file_qty = file_qty - aurora_img_status
   elif downlink_status == DESIGNED_AURORA_IMG:
     left_file_qty = len(read_designed_packet())
-  elif downlink_status == INIT:
+  elif downlink_status == INITIAL_DOWNLINK:
     print("flow is wrong")
     return False
   else:
     print("downlink status file broken")
-    write_downlink_status(INIT)
+    write_downlink_status(INITIAL_DOWNLINK)
     return False
   if left_file_qty > 0:
     print("downlink continue")
@@ -107,7 +113,7 @@ def read_designed_packet():
 def initialize_status():
   """ダウンリンクに関するステータスを全て初期化"""
   with open(generate_path("/src/status/downlink_status.txt"), "w") as file:
-    file.write(str(INIT))
+    file.write(str(INITIAL_DOWNLINK))
   with open(generate_path("/src/status/aurora_data.txt"), "w") as file:
     file.write(str(INIT_FILE_NUMBER))
   with open(generate_path("/src/status/aurora_img.txt"), "w") as file:
