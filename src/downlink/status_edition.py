@@ -84,18 +84,16 @@ def change_status_file(downlink_status):
   """
   if downlink_status == AURORA_DATA:
     with open(generate_path("/src/status/aurora_data.txt"), "r") as aurora_data_status:
-      aurora_data_status = aurora_data_status.read()
+      aurora_data_num = aurora_data_status.read()
     with open(generate_path("/src/status/aurora_data.txt"), "w") as aurora_data_status:
-      aurora_data_status.write(str(count_up(int(aurora_data_status))))
+      aurora_data_status.write(str(count_up(int(aurora_data_num))))
   elif downlink_status == AURORA_IMG:
     with open(generate_path("/src/status/aurora_img.txt"), "r") as aurora_img_status:
-      aurora_img_status = aurora_img_status.read()
-    with open(generate_path("/src/status/aurora_data.txt"), "w") as aurora_img_status:
-      aurora_img_status.write(str(count_up(int(aurora_img_status))))
+      aurora_img_num = aurora_img_status.read()
+    with open(generate_path("/src/status/aurora_img.txt"), "w") as aurora_img_status:
+      aurora_img_status.write(str(count_up(int(aurora_img_num))))
   elif downlink_status == DESIGNED_AURORA_IMG:
-    designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt", "rb"))
-    designed_files = pickle.load(designed_img_file)
-    designed_img_file.close()
+    designed_files = read_designed_packet()
     delete_initial_element(designed_files)
     designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "wb")
     pickle.dump(designed_files, designed_img_file)
