@@ -1,4 +1,3 @@
-# from format.format import get_data_from_format
 from downlink.status_edition import write_to_file, write_designed_nums, initialize_status
 from constant.format import FORMAT_DATA_SIZE, FORMAT_DOWNLINK_TYPE
 from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, AURORA_DATA_SIZE, ELEMTNTS_IMG_FILE_NUMBER
