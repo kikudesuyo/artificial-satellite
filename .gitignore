@@ -159,11 +159,10 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-#空ディレクトリをリモートに反映させる
-
+#空ディレクトリをリモートに反映
 !data/aurora_data/.gitkeep
 !data/aurora_img/.gitkeep
-!data/merged_aurora_data/.gitkeep
+data/merged_aurora_data/.gitkeep
 !img/aurora/.gitkeep
 !img/downlink_img/.gitkeep
 !img/shooting_img/.gitkeep
