@@ -163,6 +163,6 @@ cython_debug/
 !data/aurora_data/.gitkeep
 !data/aurora_img/.gitkeep
 data/merged_aurora_data/.gitkeep
-!img/aurora/.gitkeep
+img/aurora/.gitkeep
 !img/downlink_img/.gitkeep
 !img/shooting_img/.gitkeep
