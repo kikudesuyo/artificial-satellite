@@ -21,7 +21,8 @@ CMD_MC_RPI_CW_DATA, ACK_MC_RPI_DOWNLINK, CMD_MC_RPI_DOWNLINK_FINISH, ACK_MC_RPI_
 class UartSelection:
   def __init__(self):
     self.last_format_array = [0, 0, 0, 0, 0]
-    self.downlink_count = 0
+    self.send_MC_count = 0
+    # self.downlink_count = 0
     self.downlink_flag = False
     self.date_request_flag = True
     self.downlink_data = None
@@ -238,7 +239,7 @@ class UartSelection:
           self.analysis_flag = False
           print("shut down")
           request_shutdown_flow()
-          
+
       if self.send_MC_count == 10:
         if self.date_request_flag and self.downlink_flag:
           self.send_MC_count = 0
@@ -251,4 +252,4 @@ class UartSelection:
           print("shut down")
           request_shutdown_flow()
 
-      time.sleep(0.0001)
+      time.sleep(1)
