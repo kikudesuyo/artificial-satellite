@@ -6,7 +6,20 @@ from util import generate_path
 from constant.status import (INITIAL_DOWNLINK, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER,
 INIT_DESIGNED_NUMS, MERGED_AURORA_DATA_NUMBER)
 
+def write_uplink_info(uplink_data):
+  uplink_data_str = [0]*len(uplink_data)
+  for i in range(len(uplink_data)):
+   uplink_data_str[i] = format(uplink_data[i],'02x')          
+  info_data = ",".join(uplink_data_str)
+  
+  with open(generate_path("/src/status/uplink_info.txt"), "w") as status_file:
+    status_file.write(info_data)
 
+def check_uplink_info():
+  with open(generate_path("/src/status/uplink_info.txt"), "r") as status_file:
+    uplink_info = status_file.read()
+  uplink_info = uplink_info.split(',')
+  return uplink_info
 
 def write_to_file(content, relative_file_path):
   with open(generate_path(relative_file_path), "w") as file:
