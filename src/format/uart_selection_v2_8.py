@@ -164,6 +164,7 @@ class UartSelection:
     8~11  analysis_start_time
     12    analysis_duration
     """
+    initialize_status()
     self.uplink_info = check_uplink_info()
     if len(self.uplink_info) == 13:
       for i in range(13):
