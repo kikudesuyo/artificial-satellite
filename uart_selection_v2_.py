@@ -21,7 +21,7 @@ CMD_MC_RPI_CW_DATA, ACK_MC_RPI_DOWNLINK, CMD_MC_RPI_DOWNLINK_FINISH, ACK_MC_RPI_
 class UartSelection:
   def __init__(self):
     self.last_format_array = [0, 0, 0, 0, 0]
-    self.downlink_count = 0
+    self.send_MC_count = 0
     self.downlink_flag = False
     self.date_request_flag = True
     self.downlink_data = None
@@ -61,7 +61,7 @@ class UartSelection:
         print("analysis finish")
         print("request shutdown")
         request_shutdown_flow()
-
+      
       elif cmd == CMD_GS_RPI_TASK_INFO:
         uplink_info = get_data_from_format(format_array)
         if len(uplink_info) == 13:
@@ -134,7 +134,7 @@ class UartSelection:
         shooting_flow()
         print("shooting finish")
         """
-          
+
       elif cmd == ACK_MC_RPI_DATE:
         #予約コマンドから時刻データを取得後撮影
         mc_time_data = get_data_from_format(format_array)
@@ -152,7 +152,7 @@ class UartSelection:
   def main(self):
     set_gpio_line()
     print("set up finished")
-    # eps_input_status = input_from_eps()
+    #eps_input_status = input_from_eps()
     set_eps_callback()
     """
     0byte shooting
@@ -177,7 +177,7 @@ class UartSelection:
       #print(self.uplink_info)
       print("checked_status")
     else:
-      print("No_uplink_data")   
+      print("No_uplink_data")
     #解析を行うかどうかを確認する
     """
     if eps_input_status:
@@ -200,9 +200,9 @@ class UartSelection:
       for format_array in cmd_list:
         self.selection(format_array)
         self.last_format_array = format_array
-      
+
       if self.downlink_flag:
-        if time_now- self.send_MC_time >= 5:
+        if time_now-self.send_MC_time >= 5:
           send_data(MC_ADDR, CMD_RPI_MC_DOWNLINK, [int(self.downlink_sequence_num)] + self.downlink_data)
           self.send_MC_time = time.time()
           self.downlink_count += 1
@@ -213,7 +213,7 @@ class UartSelection:
           send_CMD(MC_ADDR, CMD_RPI_MC_DATE)
           self.send_MC_time = time.time()
           self.send_MC_count += 1
-      
+          
       elif self.shooting_flag:
         if shooting_start_time<adjusted_time and shooting_finish_time>adjusted_time:
           if self.initial_timestamp == INITIAL_TIMESTAMP:
@@ -224,7 +224,7 @@ class UartSelection:
             output_raspi_status(SHOOTING_COMPLETION)
         elif shooting_finish_time<adjusted_time:
             self.shooting_flag = False
-
+      
       elif self.analysis_flag:
         if adjusted_time>analysis_start_time and  adjusted_time<analysis_finish_time:
           print("analysis start")
@@ -232,15 +232,15 @@ class UartSelection:
           self.analysis_flag = False
           print("analysis finish")
           print("shut down")
-          request_shutdown_flow()   
+          request_shutdown_flow()
 
         elif analysis_finish_time<adjusted_time:
           self.analysis_flag = False
           print("shut down")
           request_shutdown_flow()
-          
+
       if self.send_MC_count == 10:
-        if self.date_request_flag and self.downlink_flag:
+        if self.date_request_flag or self.downlink_flag:
           self.send_MC_count = 0
           self.downlink_sequence_num = 0
           self.downlink_flag = False
@@ -250,5 +250,5 @@ class UartSelection:
           print("fail communication")
           print("shut down")
           request_shutdown_flow()
-
-      time.sleep(0.0001)
+      
+      time.sleep(1)

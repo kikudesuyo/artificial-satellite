@@ -22,7 +22,7 @@ def get_downlink_data(downlink_status):
   """
   try:
     if downlink_status == AURORA_DATA:
-      aurora_data_status = read_file_contents("/src/status/aurora_data.txt")
+      aurora_data_status = int(read_file_contents("/src/status/aurora_data.txt"))
       downlink_data = merge_aurora_data(first_file_name=aurora_data_status, num_merged_files=MERGED_AURORA_DATA_NUMBER)
     elif downlink_status == AURORA_IMG:
       aurora_img_status = read_file_contents("/src/status/aurora_img.txt")
