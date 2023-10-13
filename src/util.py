@@ -68,3 +68,6 @@ def restore_hex_seconds_to_datetime(hex_seconds):
   minute, second = hour_remainder // 60, hour_remainder % 60
   datetime = f'{str(day).zfill(2)}{str(hour).zfill(2)}{str(minute).zfill(2)}{str(second).zfill(2)}'
   return datetime
+
+def delete_particular_file(file_path):
+  subprocess.run(f'sudo rm {file_path}', shell=True, check=True)
