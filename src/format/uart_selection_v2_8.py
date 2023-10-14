@@ -22,7 +22,6 @@ class UartSelection:
   def __init__(self):
     self.last_format_array = [0, 0, 0, 0, 0]
     self.send_MC_count = 0
-    # self.downlink_count = 0
     self.downlink_flag = False
     self.date_request_flag = True
     self.downlink_data = None
