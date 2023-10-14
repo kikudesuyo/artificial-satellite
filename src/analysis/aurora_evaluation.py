@@ -6,7 +6,8 @@ import os
 from natsort import natsorted
 
 from constant.analysis import AURORA_THREHOLD, MAX_HSV_RANGE, MIN_HSV_RANGE, IMAGE_SIZE
-from util import generate_path, copy_file
+from util import generate_path, copy_file, delete_file
+from helper.file_operation import write_to_file, read_file_contents
 
 class AuroraAnalysis():
   
@@ -85,32 +86,35 @@ def convert_hsv_to_bgr(hsv_value):
   bgr_value = cv2.cvtColor(temporary_img.astype(np.uint8), cv2.COLOR_HSV2BGR).flatten()
   return bgr_value
 
-def make_aurora_data(img_relative_path):
+def make_aurora_data(img_path):
   """オーロラデータをnumpyに格納
-
+  最適画像の選定も実施
   Arg:
-    img_relative_path(str): artificial_satellite/からの相対パス
+    img_path(str): 絶対パス
 
   Returns:
-    aurora_data_list(numpy.ndarray): [filenumber, オーロラ率, Heu, Saturation, Value]からなる2重配列
+    aurora_data(numpy.ndarray): [filenumber, オーロラ率, Heu, Saturation, Value]からなるnumpy配列
   
   Ref:
     配列の中身の型は "numpy.float64"
   """
   analysis = AuroraAnalysis()
-  aurora_data_list = np.empty((0, 5), int)
-  img_paths = natsorted(glob.glob(generate_path(img_relative_path)))
-  for img_path in img_paths:
-    img_hsv = analysis.change_color_space(img_path)
-    aurora_rate = analysis.calculate_aurora_rate(img_hsv)
-    if aurora_rate < AURORA_THREHOLD:
-      continue
-    shooting_time = int(re.sub(r'\D', '', img_path))
-    #更新する条件を下に記述(現段階では最初の画像のみを保存)
-    files = os.listdir(generate_path("/img/downlink_img"))
-    if len(files) != 1:
+  img_hsv = analysis.change_color_space(img_path)
+  aurora_rate = analysis.calculate_aurora_rate(img_hsv)
+  if aurora_rate < AURORA_THREHOLD:
+    return None
+  shooting_time = int(re.sub(r'\D', '', img_path))
+  aurora_mean = np.array(analysis.calculate_aurora_mean(img_hsv))
+  aurora_data = np.concatenate((np.array([shooting_time, aurora_rate]), aurora_mean))
+  current_evaluation = 22222 #上の値を基に評価値を求める
+  files = os.listdir(generate_path("/img/downlink_img"))
+  if len(files) == 0:
+    copy_file(img_path, generate_path(f"/img/downlink_img/{shooting_time}.jpg"))
+    write_to_file(str(current_evaluation), "/src/status/aurora_ratings.txt")
+  else:
+    past_evaluation = int(read_file_contents("/src/status/aurora_ratings.txt"))
+    if current_evaluation > past_evaluation:
+      delete_file(generate_path("/img/downlink_img/*.jpg"))
       copy_file(img_path, generate_path(f"/img/downlink_img/{shooting_time}.jpg"))
-    aurora_mean = np.array(analysis.calculate_aurora_mean(img_hsv))
-    aurora_data = np.concatenate((np.array([shooting_time, aurora_rate]), aurora_mean))
-    aurora_data_list = np.append(aurora_data_list, np.array([aurora_data]), axis=0)
-  return aurora_data_list
+      write_to_file(str(current_evaluation), "/src/status/aurora_ratings.txt")
+  return aurora_data

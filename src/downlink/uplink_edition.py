@@ -1,4 +1,5 @@
-from downlink.status_edition import write_to_file, write_designed_nums, initialize_status
+from downlink.status_edition import write_designed_nums, initialize_status
+from helper.file_operation import write_to_file
 from constant.format import FORMAT_DATA_SIZE, FORMAT_DOWNLINK_TYPE
 from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, AURORA_DATA_SIZE, ELEMTNTS_IMG_FILE_NUMBER
 

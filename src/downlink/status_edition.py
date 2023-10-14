@@ -1,8 +1,10 @@
+import re
 import pickle
 import glob
 from natsort import natsorted
 
 from util import generate_path
+from helper.file_operation import write_to_file
 from constant.status import (INITIAL_DOWNLINK, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER,
 INIT_DESIGNED_NUMS, MERGED_AURORA_DATA_NUMBER)
 
@@ -20,10 +22,6 @@ def check_uplink_info():
     uplink_info = status_file.read()
   uplink_info = uplink_info.split(',')
   return uplink_info
-
-def write_to_file(content, relative_file_path):
-  with open(generate_path(relative_file_path), "w") as file:
-    file.write(content)
 
 def write_designed_nums(file_nums):
   """
@@ -126,10 +124,9 @@ def read_designed_packet():
 
 def initialize_status():
   """ダウンリンクに関するステータスを全て初期化"""
-  with open(generate_path("/src/status/downlink_status.txt"), "w") as file:
-    file.write(str(INITIAL_DOWNLINK))
-  with open(generate_path("/src/status/aurora_data.txt"), "w") as file:
-    file.write(str(INIT_FILE_NUMBER))
-  with open(generate_path("/src/status/aurora_img.txt"), "w") as file:
-    file.write(str(INIT_FILE_NUMBER))
+  write_to_file(str(INITIAL_DOWNLINK), "/src/status/downlink_status.txt")
+  min_file_name = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))[0]
+  min_file_number = re.sub(r'\D', '', min_file_name)
+  write_to_file(min_file_number, "/src/status/aurora_data.txt")
+  write_to_file(str(INIT_FILE_NUMBER), "/src/status/aurora_img.txt")
   write_designed_nums(INIT_DESIGNED_NUMS)
