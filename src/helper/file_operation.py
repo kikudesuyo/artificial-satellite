@@ -1,5 +1,9 @@
+import os
 import glob
-from util import generate_path, delete_files
+import re
+from natsort import natsorted
+
+from util import generate_path, delete_files, delete_file
 
 def delete_files_amount(relative_path, threshold):
   amount = len(glob.glob(generate_path(relative_path + "/*")))
@@ -18,3 +22,10 @@ def read_file_contents(relative_path):
   with open(generate_path(relative_path), "r") as file:
     contents = file.read()
   return contents
+
+def delete_files_smaller_than_threshold(threshold):
+  files = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))
+  deleted_paths = list(filter(lambda path: int(re.sub(r'\D', '', path)) < threshold, files))
+  for deleted_path in deleted_paths:
+    print(deleted_path)
+    # delete_file(deleted_path)
