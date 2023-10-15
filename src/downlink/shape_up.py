@@ -1,5 +1,6 @@
 import os
 from util import generate_path
+from helper.file_operation import read_file_contents
 
 def split_string(string):
   """ダウンリンクするために文字列を配列に格納
@@ -27,10 +28,9 @@ def merge_aurora_data(first_file_name, num_merged_files):
   """
   merged_data = ""
   for file_name in range(first_file_name, first_file_name + num_merged_files):
-    file_path = generate_path(f"/data/aurora_data/{file_name}.txt")
-    if os.path.exists(file_path):
-      with open(file_path, "r") as aurora_data_file:
-        aurora_data = aurora_data_file.read()
+    file_path = f"/data/aurora_data/{file_name}.txt"
+    if os.path.exists(generate_path(file_path)):
+      aurora_data = read_file_contents(file_path)
       merged_data += aurora_data
     else:
       return merged_data
