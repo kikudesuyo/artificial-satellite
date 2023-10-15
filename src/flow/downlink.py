@@ -1,12 +1,8 @@
 from util import generate_path
+from helper.file_operation import read_file_contents
 from downlink.shape_up import split_string, merge_aurora_data
 from downlink.status_edition import read_designed_packet, initialize_status
 from constant.status import AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, MERGED_AURORA_DATA_NUMBER
-
-def read_file_contents(relative_path):
-  with open(generate_path(relative_path), "r") as file:
-    file_data = file.read()
-  return file_data
 
 def get_downlink_data(downlink_status):
   """

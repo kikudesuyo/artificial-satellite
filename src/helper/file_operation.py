@@ -26,5 +26,4 @@ def delete_files_smaller_than_threshold(threshold):
   files = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))
   deleted_paths = list(filter(lambda path: int(re.sub(r'\D', '', path)) < threshold, files))
   for deleted_path in deleted_paths:
-    print(deleted_path)
-    # delete_file(deleted_path)
+    delete_file(deleted_path)
