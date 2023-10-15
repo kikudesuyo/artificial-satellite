@@ -41,55 +41,13 @@ def write_downlink_status(downlink_status):
   with open(generate_path("/src/status/downlink_status.txt"), "w") as status_file:
     status_file.write(str(downlink_status))
 
-def check_status(relative_path):
-  """
-
-  Arg:
-    relative_path (str)
-  Return:
-    status (int): ダウンリンクする対象
-  """
-  with open(generate_path(relative_path), "r") as status_file:
-    status = int(status_file.read())
-  return status
-
-def is_continuing_downlink():
-  """ダウンリンク継続か
-
-  Return:
-    bool
-  """
-  downlink_status = check_status("/src/status/downlink_status.txt") 
-  if downlink_status == AURORA_DATA:
-    file_qty = len(natsorted(glob.glob(generate_path("/data/aurora_data/*"))))
-    aurora_data_status = check_status("/src/status/aurora_data.txt")
-    left_file_qty = file_qty - aurora_data_status
-  elif downlink_status == AURORA_IMG:
-    file_qty = len(natsorted(glob.glob(generate_path("/data/aurora_img/*"))))
-    aurora_img_status = check_status("/src/status/aurora_img.txt")
-    left_file_qty = file_qty - aurora_img_status
-  elif downlink_status == DESIGNED_AURORA_IMG:
-    left_file_qty = len(read_designed_packet())
-  elif downlink_status == INITIAL_DOWNLINK:
-    print("flow is wrong")
-    return False
-  else:
-    print("downlink status file broken")
-    write_downlink_status(INITIAL_DOWNLINK)
-    return False
-  if left_file_qty > 0:
-    print("downlink continue")
-    return True
-  else:
-    print("downlink finish")
-    return False
-
 def count_up(current_count, increment=1):
   """現在のcountからincrement分だけ増加"""
   return current_count + increment
 
 def delete_initial_element(list):
-  list.pop(0)
+  if len(list) != 0:
+    list.pop(0)
   return list
 
 def renew_status_file(downlink_status):
@@ -106,9 +64,7 @@ def renew_status_file(downlink_status):
   elif downlink_status == DESIGNED_AURORA_IMG:
     designed_files = read_designed_packet()
     delete_initial_element(designed_files)
-    designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "wb")
-    pickle.dump(designed_files, designed_img_file)
-    designed_img_file.close()
+    write_designed_nums(designed_files)
   else:
     print("flow is wrong")
 
