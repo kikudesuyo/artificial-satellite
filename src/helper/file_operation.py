@@ -11,8 +11,7 @@ def delete_files_amount(relative_path, threshold):
     delete_files(relative_path)
 
 def output_raspi_status(status):
-  with open(generate_path("/src/status/raspi_status.txt"), "w") as status_file:
-    status_file.write(str(status))
+  write_to_file(status, "/src/status/raspi_status.txt")
 
 def write_to_file(content, relative_file_path):
   with open(generate_path(relative_file_path), "w") as file:
