@@ -4,9 +4,9 @@ import glob
 from natsort import natsorted
 
 from util import generate_path
-from helper.file_operation import write_to_file
+from helper.file_operation import read_file_contents, write_to_file
 from constant.status import (INITIAL_DOWNLINK, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER,
-INIT_DESIGNED_NUMS, MERGED_AURORA_DATA_NUMBER)
+INIT_DESIGNED_NUMS)
 
 def write_uplink_info(uplink_data):
   uplink_data_str = [0]*len(uplink_data)
@@ -97,15 +97,12 @@ def renew_status_file(downlink_status):
   ファイル数を確認
   """
   if downlink_status == AURORA_DATA:
-    with open(generate_path("/src/status/aurora_data.txt"), "r") as aurora_data_status:
-      aurora_data_num = aurora_data_status.read()
-    with open(generate_path("/src/status/aurora_data.txt"), "w") as aurora_data_status:
-      aurora_data_status.write(str(count_up(int(aurora_data_num), MERGED_AURORA_DATA_NUMBER)))
+    min_file_name = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))[0]
+    min_file_number = re.sub(r'\D', '', min_file_name)
+    write_to_file(min_file_number, "/src/status/aurora_data.txt")
   elif downlink_status == AURORA_IMG:
-    with open(generate_path("/src/status/aurora_img.txt"), "r") as aurora_img_status:
-      aurora_img_num = aurora_img_status.read()
-    with open(generate_path("/src/status/aurora_img.txt"), "w") as aurora_img_status:
-      aurora_img_status.write(str(count_up(int(aurora_img_num))))
+    aurora_img_num = read_file_contents("/src/status/aurora_img.txt")
+    write_to_file(str(count_up(int(aurora_img_num))), "/src/status/aurora_img.txt")
   elif downlink_status == DESIGNED_AURORA_IMG:
     designed_files = read_designed_packet()
     delete_initial_element(designed_files)
