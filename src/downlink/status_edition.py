@@ -46,7 +46,13 @@ def delete_initial_element(list):
 
 def renew_status_file(downlink_status):
   """ダウンリンク後にstatusを変更
-  ファイル数を確認
+
+  aurora_data:
+    一番小さいファイル番号
+  aurora_img:
+    1つカウントアップ
+  designed_aurora_img:
+    最初の要素を削除
   """
   if downlink_status == AURORA_DATA:
     min_file_name = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))[0]
