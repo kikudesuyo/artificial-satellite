@@ -13,15 +13,18 @@ def write_uplink_info(uplink_data):
   for i in range(len(uplink_data)):
    uplink_data_str[i] = format(uplink_data[i],'02x')          
   info_data = ",".join(uplink_data_str)
-  
-  with open(generate_path("/src/status/uplink_info.txt"), "w") as status_file:
-    status_file.write(info_data)
+  write_to_file(info_data, "/src/status/uplink_info.txt")
 
 def check_uplink_info():
-  with open(generate_path("/src/status/uplink_info.txt"), "r") as status_file:
-    uplink_info = status_file.read()
+  uplink_info = read_file_contents("/src/status/uplink_info.txt")
   uplink_info = uplink_info.split(',')
   return uplink_info
+
+def read_designed_packet():
+  designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "rb")
+  designed_files = pickle.load(designed_img_file)
+  designed_img_file.close()
+  return designed_files
 
 def write_designed_nums(file_nums):
   """
@@ -31,15 +34,6 @@ def write_designed_nums(file_nums):
   designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "wb")
   pickle.dump(file_nums, designed_img_file)
   designed_img_file.close()
-
-def write_downlink_status(downlink_status):
-  """何をダウンリンクするかをステータスファイルに保存
-  
-  Arg:
-    downlink_status (int):
-  """
-  with open(generate_path("/src/status/downlink_status.txt"), "w") as status_file:
-    status_file.write(str(downlink_status))
 
 def count_up(current_count, increment=1):
   """現在のcountからincrement分だけ増加"""
@@ -67,13 +61,6 @@ def renew_status_file(downlink_status):
     write_designed_nums(designed_files)
   else:
     print("flow is wrong")
-
-
-def read_designed_packet():
-  designed_img_file = open(generate_path("/src/status/designed_aurora_img.txt"), "rb")
-  designed_files = pickle.load(designed_img_file)
-  designed_img_file.close()
-  return designed_files
 
 def initialize_status():
   """ダウンリンクに関するステータスを全て初期化"""
