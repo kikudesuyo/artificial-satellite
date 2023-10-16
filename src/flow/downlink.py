@@ -26,7 +26,7 @@ def get_downlink_data(downlink_status):
       designed_img_status = read_designed_packet()[0]
       downlink_data = read_file_contents(f"/data/aurora_img/{designed_img_status}.txt")
     else:
-      raise ValueError("downlink status doesn't exist. Initialize all status.")
+      raise FileExistsError("downlink data doesn't exist. Initialize all status.")
   except Exception as e:
     print(e)
     initialize_status()

@@ -14,7 +14,6 @@ def read_file_contents(relative_path):
     contents = file.read()
   return contents
 
-
 def is_empty_directory(relative_directory_path):
   absolute_path = generate_path(relative_directory_path)
   if os.path.exists(absolute_path):
@@ -22,12 +21,21 @@ def is_empty_directory(relative_directory_path):
   else:
     return False
 
+def is_directory_not_empty(relative_directory_path):
+  absolute_path = generate_path(relative_directory_path)
+  if os.path.exists(absolute_path):
+    return any(os.listdir(absolute_path))
+  else:
+    return False
+
+
 def delete_files_amount(relative_path, threshold):
   amount = len(glob.glob(generate_path(relative_path + "/*")))
   if amount >= threshold:
     delete_all_files(relative_path)
 
 def delete_files_smaller_than_threshold(threshold):
+  """閾値よりも小さいファイル番号を削除"""
   files = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))
   deleted_paths = list(filter(lambda path: int(re.sub(r'\D', '', path)) < threshold, files))
   for deleted_path in deleted_paths:
