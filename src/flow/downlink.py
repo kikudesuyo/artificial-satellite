@@ -1,4 +1,3 @@
-from util import generate_path
 from helper.file_operation import read_file_contents
 from downlink.shape_up import split_string, merge_aurora_data
 from downlink.status_edition import read_designed_packet, initialize_status
