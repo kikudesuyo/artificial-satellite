@@ -7,20 +7,8 @@ from downlink.shape_up import merge_aurora_data
 
 from flow.split import split_flow
 
-# split_flow()
+split_flow()
 # from analysis.main import main
 
 # main()
 
-import subprocess
-from util import generate_path
-import glob
-
-def delete_all_files(directory_path):
-  full = len(glob.glob(directory_path + "/*"))
-  only_extension = len(glob.glob(directory_path + "/*.*"))
-  if full != only_extension:
-    raise IsADirectoryError("Error!!指定したディレクトリの中にディレクトリが存在します。")
-  subprocess.run(['sudo', 'rm', '-r', directory_path], check=True)
-
-delete_all_files(generate_path("/data/aurora_data"))

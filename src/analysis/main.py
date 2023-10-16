@@ -3,6 +3,7 @@ import glob
 from util import generate_path, delete_file
 from helper.file_operation import write_to_file
 from analysis.aurora_evaluation import make_aurora_data
+
 def main():
   """
   画像読み込み→解析→テキスト出力→画像破棄

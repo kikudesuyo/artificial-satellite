@@ -8,7 +8,6 @@ from flow.split import split_flow
 from format.format import send_data, send_CMD, run, get_data_from_format, FORMAT_ADRS_SENDER
 from downlink.uplink_edition import write_uplink_data_to_status
 from downlink.status_edition import renew_status_file, initialize_status, write_uplink_info, check_uplink_info
-from helper.file_operation import output_raspi_status
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, MC_ADDR, FORMAT_CMD
@@ -210,7 +209,6 @@ class UartSelection:
 
       elif self.date_request_flag:
         if time_now-self.send_MC_time >= 2:
-          output_raspi_status(SHOOTING_INTERRUPTION)
           send_CMD(MC_ADDR, CMD_RPI_MC_DATE)
           self.send_MC_time = time.time()
           self.send_MC_count += 1
@@ -222,7 +220,6 @@ class UartSelection:
           if is_continuing_shooting(self.initial_timestamp, self.satellite_time):
             shooting_flow(self.satellite_time)
             print("SHOOTING_FINISH")
-            output_raspi_status(SHOOTING_COMPLETION)
         elif shooting_finish_time<adjusted_time:
             self.shooting_flag = False
 

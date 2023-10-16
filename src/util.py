@@ -1,6 +1,4 @@
 from pathlib import Path
-import os
-import shutil
 import glob
 import subprocess
 
@@ -15,22 +13,22 @@ def generate_path(path):
   """
   return str(Path(__file__).parents[1]) + path
 
-def delete_files(directory_path):
-  """指定のディレクトリ内に存在するファイルを削除
-  
+def delete_all_files(relative_directory_path):
+  """指定のディレクトリ内に存在するファイルを全て削除
+
   Caution:
     削除したファイルは復元不可能
     
   Arg:
-    directory_path(str): artificial_satellite/からの相対パス 
+    relative_directory_path(str): artificial_satellite/からの相対パス 
   """
-  absolute_path = generate_path(directory_path)
+  absolute_path = generate_path(relative_directory_path)
   full = len(glob.glob(absolute_path + "/*"))
   only_extension = len(glob.glob(absolute_path + "/*.*"))
   if full != only_extension:
     raise IsADirectoryError("Error!!指定したディレクトリの中にディレクトリが存在します。")
-  shutil.rmtree(absolute_path)
-  os.makedirs(absolute_path)
+  subprocess.run(['sudo', 'rm', '-r', absolute_path], check=True)
+  subprocess.run(['mkdir', absolute_path], check=True)
   
 def shutdown():
   """

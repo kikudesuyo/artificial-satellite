@@ -1,17 +1,13 @@
-import os
 import glob
 import re
 from natsort import natsorted
 
-from util import generate_path, delete_files, delete_file
+from util import generate_path, delete_all_files, delete_file
 
 def delete_files_amount(relative_path, threshold):
   amount = len(glob.glob(generate_path(relative_path + "/*")))
   if amount >= threshold:
-    delete_files(relative_path)
-
-def output_raspi_status(status):
-  write_to_file(str(status), "/src/status/raspi_status.txt")
+    delete_all_files(relative_path)
 
 def write_to_file(content, relative_file_path):
   with open(generate_path(relative_file_path), "w") as file:
