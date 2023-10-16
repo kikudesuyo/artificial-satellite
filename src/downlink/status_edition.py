@@ -70,7 +70,6 @@ def renew_status_file(downlink_status):
 
 def initialize_status():
   """ダウンリンクに関するステータスを全て初期化"""
-  write_to_file(str(INITIAL_DOWNLINK), "/src/status/downlink_status.txt")
   min_file_name = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))[0]
   min_file_number = re.sub(r'\D', '', min_file_name)
   write_to_file(min_file_number, "/src/status/aurora_data.txt")
