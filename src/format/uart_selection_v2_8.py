@@ -11,7 +11,7 @@ from downlink.status_edition import renew_status_file, initialize_status, write_
 from eps_line import set_eps_callback, input_from_eps, request_shutdown_flow
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, MC_ADDR, FORMAT_CMD
-from constant.status import SHOOTING_COMPLETION, SHOOTING_INTERRUPTION, INITIAL_DOWNLINK
+from constant.status import INITIAL_DOWNLINK
 from constant.shooting import INITIAL_TIMESTAMP
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_MC_DOWNLINK,CMD_RPI_MC_DATE,
 ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, CMD_GS_RPI_ANALYSIS, CMD_GS_RPI_TASK_INFO,
