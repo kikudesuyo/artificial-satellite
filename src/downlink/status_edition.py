@@ -4,9 +4,8 @@ import glob
 from natsort import natsorted
 
 from util import generate_path
-from helper.file_operation import read_file_contents, write_to_file
-from constant.status import (INITIAL_DOWNLINK, AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER,
-INIT_DESIGNED_NUMS)
+from helper.file_operation import is_directory_not_empty, read_file_contents, write_to_file
+from constant.status import (AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_FILE_NUMBER, INIT_DESIGNED_NUMS)
 
 def write_uplink_info(uplink_data):
   uplink_data_str = [0]*len(uplink_data)
@@ -55,12 +54,19 @@ def renew_status_file(downlink_status):
     最初の要素を削除
   """
   if downlink_status == AURORA_DATA:
-    min_file_name = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))[0]
-    min_file_number = re.sub(r'\D', '', min_file_name)
-    write_to_file(min_file_number, "/src/status/aurora_data.txt")
+    if is_directory_not_empty("/data/aurora_data"):
+      min_file_name = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))[0]
+      min_file_number = re.sub(r'\D', '', min_file_name)
+      write_to_file(min_file_number, "/src/status/aurora_data.txt")
+    else:
+      write_to_file(str(INIT_FILE_NUMBER), "/src/status/aurora_data.txt")
   elif downlink_status == AURORA_IMG:
-    aurora_img_num = read_file_contents("/src/status/aurora_img.txt")
-    write_to_file(str(count_up(int(aurora_img_num))), "/src/status/aurora_img.txt")
+    if is_directory_not_empty("/data/aurora_img"):
+      aurora_img_num = read_file_contents("/src/status/aurora_img.txt")
+      print(aurora_img_num)
+      write_to_file(str(count_up(int(aurora_img_num))), "/src/status/aurora_img.txt")
+    else:
+      write_to_file(str(INIT_FILE_NUMBER), "/src/status/aurora_img.txt")
   elif downlink_status == DESIGNED_AURORA_IMG:
     designed_files = read_designed_packet()
     delete_initial_element(designed_files)
@@ -70,8 +76,11 @@ def renew_status_file(downlink_status):
 
 def initialize_status():
   """ダウンリンクに関するステータスを全て初期化"""
-  min_file_name = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))[0]
-  min_file_number = re.sub(r'\D', '', min_file_name)
-  write_to_file(min_file_number, "/src/status/aurora_data.txt")
+  if is_directory_not_empty("/data/aurora_data"):
+    min_file_name = natsorted(glob.glob(generate_path("/data/aurora_data/*.txt")))[0]
+    min_file_number = re.sub(r'\D', '', min_file_name)
+    write_to_file(min_file_number, "/src/status/aurora_data.txt")
+  else:
+    write_to_file(str(INIT_FILE_NUMBER), "/src/status/aurora_data.txt")
   write_to_file(str(INIT_FILE_NUMBER), "/src/status/aurora_img.txt")
   write_designed_nums(INIT_DESIGNED_NUMS)
