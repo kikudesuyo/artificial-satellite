@@ -1,5 +1,5 @@
-natsort==8.4.0
-numpy==1.26.0
-opencv-python==4.8.1.78
-pyserial==3.5
-RPi.GPIO==0.7.1
+natsort==7.1.0
+numpy==1.19.5
+opencv-python==4.5.1
+pyserial==3.5b0
+RPi.GPIO==0.7.0
