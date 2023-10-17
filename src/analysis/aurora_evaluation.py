@@ -106,13 +106,18 @@ def make_aurora_data(img_path):
   shooting_time = int(re.sub(r'\D', '', img_path))
   aurora_mean = np.array(analysis.calculate_aurora_mean(img_hsv))
   aurora_data = np.concatenate((np.array([shooting_time, aurora_rate]), aurora_mean))
-  current_evaluation = 22222 #上の値を基に評価値を求める
+  current_evaluation = aurora_rate + aurora_mean[2]/255 #上の値を基に評価値を求める
   files = os.listdir(generate_path("/img/downlink_img"))
   if len(files) == 0:
     copy_file(img_path, generate_path(f"/img/downlink_img/{shooting_time}.jpg"))
     write_to_file(str(current_evaluation), "/src/status/aurora_ratings.txt")
   else:
-    past_evaluation = int(read_file_contents("/src/status/aurora_ratings.txt"))
+    try:
+      past_evaluation = float(read_file_contents("/src/status/aurora_ratings.txt"))
+    except ValueError as e:
+      past_evaluation = 0
+    print(past_evaluation)
+    print(current_evaluation)
     if current_evaluation > past_evaluation:
       delete_file(generate_path("/img/downlink_img/*.jpg"))
       copy_file(img_path, generate_path(f"/img/downlink_img/{shooting_time}.jpg"))

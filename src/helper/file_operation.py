@@ -14,20 +14,12 @@ def read_file_contents(relative_path):
     contents = file.read()
   return contents
 
-def is_empty_directory(relative_directory_path):
-  absolute_path = generate_path(relative_directory_path)
-  if os.path.exists(absolute_path):
-    return any(os.listdir(absolute_path))
-  else:
-    return False
-
 def is_directory_not_empty(relative_directory_path):
   absolute_path = generate_path(relative_directory_path)
   if os.path.exists(absolute_path):
     return any(os.listdir(absolute_path))
   else:
     return False
-
 
 def delete_files_amount(relative_path, threshold):
   amount = len(glob.glob(generate_path(relative_path + "/*")))
