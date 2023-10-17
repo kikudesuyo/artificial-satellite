@@ -63,7 +63,6 @@ def renew_status_file(downlink_status):
   elif downlink_status == AURORA_IMG:
     if is_directory_not_empty("/data/aurora_img"):
       aurora_img_num = read_file_contents("/src/status/aurora_img.txt")
-      print(aurora_img_num)
       write_to_file(str(count_up(int(aurora_img_num))), "/src/status/aurora_img.txt")
     else:
       write_to_file(str(INIT_FILE_NUMBER), "/src/status/aurora_img.txt")
