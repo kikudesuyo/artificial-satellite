@@ -10,5 +10,5 @@ from flow.split import split_flow
 # split_flow()
 from analysis.main import main
 
-for _ in range(1, 11):
-  main()
+# for _ in range(1, 11):
+main()
