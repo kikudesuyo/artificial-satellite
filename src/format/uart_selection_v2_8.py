@@ -66,8 +66,11 @@ class UartSelection:
       elif cmd == CMD_GS_RPI_ANALYSIS:
         self.ACK_uplink_flag = True
         self.downlink_data = [CMD_GS_RPI_ANALYSIS]
+        self.analysis_flag = True
         print("analysis start")
-        analysis_flow()
+        analysis_times = get_data_from_format(format_array)[0]
+        for _ in range(analysis_times):
+          analysis_flow()
         print("analysis finish")
         print("request shutdown")
         request_shutdown_flow()
@@ -226,7 +229,10 @@ class UartSelection:
       if time_flag:
         p_time = int(adjusted_time)
         print("adjusted_time")
-        print(adjusted_time)
+        # print(adjusted_time)
+        minute  = int(adjusted_time/60)
+        second  = adjusted_time%60
+        print(f"{minute}m{second}s")
         """
         print("last_task_time)
         print(last_task_time)
