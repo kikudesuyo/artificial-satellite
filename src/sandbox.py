@@ -11,4 +11,7 @@ from flow.split import split_flow
 from analysis.main import main
 
 # for _ in range(1, 11):
-main()
+from helper.file_operation import read_file_contents
+from constant.status import MERGED_AURORA_DATA_NUMBER
+
+
