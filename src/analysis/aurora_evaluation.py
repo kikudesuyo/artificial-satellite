@@ -1,9 +1,7 @@
 import cv2
 import numpy as np
 import re
-import glob
 import os
-from natsort import natsorted
 
 from constant.analysis import AURORA_THREHOLD, MAX_HSV_RANGE, MIN_HSV_RANGE, IMAGE_SIZE
 from util import generate_path, copy_file, delete_file
@@ -116,8 +114,6 @@ def make_aurora_data(img_path):
       past_evaluation = float(read_file_contents("/src/status/aurora_ratings.txt"))
     except ValueError as e:
       past_evaluation = 0
-    print(past_evaluation)
-    print(current_evaluation)
     if current_evaluation > past_evaluation:
       delete_file(generate_path("/img/downlink_img/*.jpg"))
       copy_file(img_path, generate_path(f"/img/downlink_img/{shooting_time}.jpg"))
