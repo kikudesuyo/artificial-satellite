@@ -12,7 +12,7 @@ from helper.file_operation import read_file_contents, delete_files_smaller_than_
 from eps_line import set_eps_callback, request_shutdown_flow
 from gpio_setting import set_gpio_line
 from constant.format import GS_ADDR, MC_ADDR, FORMAT_CMD, CW_ADDR
-from constant.status import INITIAL_DOWNLINK, MERGED_AURORA_DATA_NUMBER
+from constant.status import INITIAL_DOWNLINK, AURORA_DATA, MERGED_AURORA_DATA_NUMBER
 from constant.shooting import INITIAL_TIMESTAMP
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_MC_DOWNLINK,CMD_RPI_MC_DATE,
 ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, CMD_GS_RPI_ANALYSIS, CMD_GS_RPI_TASK_INFO,
@@ -126,8 +126,10 @@ class UartSelection:
                 self.downlink_data = None
                 print("ACK_UPLINK_FINISH")
               else:
-                initial_file_name = int(read_file_contents("/src/status/aurora_data.txt"))
-                delete_files_smaller_than_threshold(initial_file_name+MERGED_AURORA_DATA_NUMBER)
+                if self.downlink_status == AURORA_DATA:
+                  initial_file_name = read_file_contents("/src/status/aurora_data.txt")
+                  if initial_file_name != "":
+                    delete_files_smaller_than_threshold(int(initial_file_name)+MERGED_AURORA_DATA_NUMBER)
                 renew_status_file(self.downlink_status)        
                 self.downlink_data = get_downlink_data(self.downlink_status)
                 self.downlink_sequence_num = (self.downlink_sequence_num+1) & 0xff

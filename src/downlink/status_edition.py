@@ -10,7 +10,7 @@ from constant.status import (AURORA_DATA, AURORA_IMG, DESIGNED_AURORA_IMG, INIT_
 def write_uplink_info(uplink_data):
   uplink_data_str = [0]*len(uplink_data)
   for i in range(len(uplink_data)):
-   uplink_data_str[i] = format(uplink_data[i],'02x')          
+    uplink_data_str[i] = format(uplink_data[i],'02x')          
   info_data = ",".join(uplink_data_str)
   write_to_file(info_data, "/src/status/uplink_info.txt")
 

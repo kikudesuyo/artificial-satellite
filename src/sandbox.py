@@ -1,17 +1,14 @@
+from downlink.shape_up import read_file_contents
+from downlink.status_edition import renew_status_file
 from helper.file_operation import delete_files_smaller_than_threshold
-from downlink.status_edition import renew_status_file, write_designed_nums
-from downlink.shape_up import merge_aurora_data
-from util import generate_path
-#オーロラデータのテキストの値とマージする数を足したものを引数とすればOK
-# delete_files_smaller_than_threshold(5)
+from constant.status import MERGED_AURORA_DATA_NUMBER, AURORA_DATA
 
-from flow.split import split_flow
+downlink_status = 1
+if downlink_status == AURORA_DATA:
+  initial_file_name = read_file_contents("/src/status/aurora_data.txt")
+  if initial_file_name != "":
+    delete_files_smaller_than_threshold(int(initial_file_name)+MERGED_AURORA_DATA_NUMBER)
+renew_status_file(downlink_status)        
 
-# split_flow()
-from analysis.main import main
-
-# for _ in range(1, 11):
-from helper.file_operation import read_file_contents
-from constant.status import MERGED_AURORA_DATA_NUMBER
 
 
