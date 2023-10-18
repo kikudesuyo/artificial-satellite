@@ -16,7 +16,7 @@ from constant.status import INITIAL_DOWNLINK, AURORA_DATA, MERGED_AURORA_DATA_NU
 from constant.shooting import INITIAL_TIMESTAMP
 from constant.command_list import (ACK_RPI_GS_SPLIT, CMD_RPI_MC_DOWNLINK,CMD_RPI_MC_DATE,
 ACK_RPI_MC_CW_DATA, CMD_GS_RPI_SPLIT, CMD_GS_RPI_DOWNLINK, CMD_GS_RPI_ANALYSIS, CMD_GS_RPI_TASK_INFO,
-CMD_MC_RPI_CW_DATA, ACK_MC_RPI_DOWNLINK, CMD_MC_RPI_DOWNLINK_FINISH, ACK_MC_RPI_DATE)
+CMD_MC_RPI_CW_DATA, ACK_MC_RPI_DOWNLINK, CMD_MC_RPI_DOWNLINK_FINISH, ACK_MC_RPI_DATE, ACK_RPI_MC_DOWNLINK_FINISH)
 
 class UartSelection:
   def __init__(self):
@@ -103,6 +103,7 @@ class UartSelection:
         mc_sequence = get_data_from_format(format_array)
         if len(mc_sequence) == 2:
           self.send_MC_count = 0
+          self.send_MC_time = 0
           if mc_sequence[1] == 1:
             if mc_sequence[0] == self.downlink_sequence_num:
               self.downlink_flag = False
@@ -141,11 +142,11 @@ class UartSelection:
                   print("downlink multiple times")
                 else:
                   self.downlink_flag = False
-                  send_CMD(MC_ADDR, CMD_RPI_MC_DOWNLINK)
+                  send_CMD(MC_ADDR, ACK_RPI_MC_DOWNLINK_FINISH)
                   self.downlink_sequence_num = 0
           else:
             self.downlink_flag = False
-            send_CMD(MC_ADDR, CMD_RPI_MC_DOWNLINK)
+            send_CMD(MC_ADDR, ACK_RPI_MC_DOWNLINK_FINISH)
             self.downlink_sequence_num = 0
             #ダウンリンクステータスの変更をする必要がある
             #送るデータがあるなら要求、ないならシャットダウン(ダウンリンクに関しては２回目以降)
@@ -279,7 +280,6 @@ class UartSelection:
         if adjusted_time>self.analysis_start_time and  adjusted_time<self.analysis_finish_time:
           print("analysis start")
           analysis_flow()
-          self.analysis_flag = False
           print("analysis finish")
           if not(self.split_flag):
             print("shut down")
