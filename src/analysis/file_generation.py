@@ -4,8 +4,9 @@ import numpy as np
 from natsort import natsorted
 
 from util import generate_path
+from constant.analysis import RESIZE_WIDTH, RESIZE_HEIGHT
 
-def split_text_string(data_path, split_data_directory, string_length=128):
+def split_text_string(data_path, split_data_directory, string_length=140):
   """.txtファイル内の文字列をn文字ごとに分割
     分割して生成されたデータのヘッダーに分割番号を追加
 
@@ -34,29 +35,26 @@ def split_text_string(data_path, split_data_directory, string_length=128):
     open(packet, "w").write(header + element_index)
     file_name += 1
 
-def combine_string(relative_path, readline_length=60):
+def combine_string(relative_path):
   """.txtファイル内の文字列同士を結合して1つの.txtファイルを作成
 
   Args:
     relative_path (str): artificial_satellite/からの相対パス
       e.g.) "/data/aurora_img/*.txt"
+  
+  Caution:
+    0.txtは時刻データのため除外する
 
-    readline_length (int): 1行に記入する文字列の長さ
-      
+    分割されたデータのヘッダーにファイル番号を6文字持つため並び替えた後除外
   """
-  all_aurora_data = ""
+  img_data = ""
   aurora_data_paths = natsorted(glob.glob(generate_path(relative_path)))
   for aurora_data_path in aurora_data_paths:
     file = open(aurora_data_path, "r")
-    aurora_data = file.read()
-    all_aurora_data += aurora_data
-  binary_data = ""
-  read_lines = [all_aurora_data[i:i+readline_length] for i in range(0, len(all_aurora_data), readline_length)]
-  for read_line in read_lines:
-    binary_data += read_line + '\n'
-  binary_data_path = generate_path("/data/restore.txt")
-  open(binary_data_path, "w").write(binary_data)
-  
+    aurora_data = file.read()[6:]
+    img_data += aurora_data
+  return img_data
+
 def convert_img_into_text(relative_img_path, relative_text_path):
   """画像をテキストデータに変換
 
@@ -73,7 +71,7 @@ def convert_img_into_text(relative_img_path, relative_text_path):
   with open(generate_path(relative_text_path), "w") as img_text_file:
     img_text_file.write(hex_img_data)
 
-def restore_img(raw_data_relative_path, restore_relative_path, width, height):
+def restore_img(img_data, restore_relative_path):
   """テキストデータから画像復元
 
   Args:
@@ -82,12 +80,11 @@ def restore_img(raw_data_relative_path, restore_relative_path, width, height):
     width (int): 横の画素数
     height (int): 縦の画素数
   """
-  with open(generate_path(raw_data_relative_path), "r") as img_text_file:
-    img_data = img_text_file.read()
   hex_pixel_array = [img_data[i:i+2] for i in range(0, len(img_data), 2)]
   pixel_array = np.array([])
   for hex_pixel_element in hex_pixel_array:
     pixel_element = int(hex_pixel_element, 16)
     pixel_array = np.append(pixel_array, pixel_element)
-  img = np.reshape(pixel_array, (height, width, 3))
+  print(len(pixel_array))
+  img = pixel_array.reshape(RESIZE_HEIGHT,RESIZE_WIDTH,3)
   cv2.imwrite(generate_path(restore_relative_path), img)
