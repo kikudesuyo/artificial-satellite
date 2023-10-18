@@ -85,6 +85,5 @@ def restore_img(img_data, restore_relative_path):
   for hex_pixel_element in hex_pixel_array:
     pixel_element = int(hex_pixel_element, 16)
     pixel_array = np.append(pixel_array, pixel_element)
-  print(len(pixel_array))
   img = pixel_array.reshape(RESIZE_HEIGHT,RESIZE_WIDTH,3)
   cv2.imwrite(generate_path(restore_relative_path), img)
