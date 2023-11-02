@@ -309,9 +309,9 @@ class UartSelection:
           self.date_request_flag = False
           self.send_MC_time = 0
           initialize_status()
-          print("fail communication")
-          print("shut down")
-          request_shutdown_flow()
+        print("fail communication")
+        print("shut down")
+        request_shutdown_flow()
       if no_task_flag:
         # print(time_now)
         # print(last_task_time)
