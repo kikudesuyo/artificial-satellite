@@ -3,7 +3,7 @@ from util import shutdown
 import RPi.GPIO as GPIO
 from constant.eps_relation import TX_EPS_RX_RPI, TX_RPI_RX_EPS
 
-def callback_eps_shutdown():
+def callback_eps_shutdown(gpio_pin):
   print("receive_shutdown_sign from io line")
   GPIO.output(TX_RPI_RX_EPS, GPIO.HIGH)
   shutdown()
