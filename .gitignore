@@ -180,3 +180,6 @@ src/analysis/brightness_experiment.py
 src/analysis/predict_threhold.py
 src/downlink/downlink.py
 src/analysis/loop.py
+
+
+.DS_Store
